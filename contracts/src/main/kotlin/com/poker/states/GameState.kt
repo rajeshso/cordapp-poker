@@ -7,9 +7,9 @@ import net.corda.core.contracts.OwnableState
 import net.corda.core.identity.AbstractParty
 
 @BelongsToContract(PokerContract::class)
-data class DealerState(val player_issuedCards: Map<String, String>,
-                       val notIssuedCards: Set<String>,
-                       override val participants: List<AbstractParty> = listOf(), override val owner: AbstractParty) : OwnableState {
+data class GameState(val player_issuedCards: Map<String, String>,
+                     val notIssuedCards: Set<String>,
+                     override val participants: List<AbstractParty> = listOf(), override val owner: AbstractParty) : OwnableState {
     override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
         TODO("not implemented")
     }
