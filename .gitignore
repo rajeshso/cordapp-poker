@@ -9,6 +9,9 @@ tags
 *.orig
 
 .gradle
+/build/
+
+!gradle-wrapper.jar
 
 # General build files
 **/build/*
