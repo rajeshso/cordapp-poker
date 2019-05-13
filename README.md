@@ -52,30 +52,42 @@ the other nodes on the network:
 
     Tue Nov 06 11:58:13 GMT 2018>>> run networkMapSnapshot
     [
-      {
-      "addresses" : [ "localhost:10002" ],
-      "legalIdentitiesAndCerts" : [ "O=Notary, L=London, C=GB" ],
-      "platformVersion" : 3,
-      "serial" : 1541505484825
-    },
-      {
-      "addresses" : [ "localhost:10005" ],
-      "legalIdentitiesAndCerts" : [ "O=PlayerA, L=London, C=GB" ],
-      "platformVersion" : 3,
-      "serial" : 1541505382560
-    },
-      {
-      "addresses" : [ "localhost:10008" ],
-      "legalIdentitiesAndCerts" : [ "O=PlayerB, L=New York, C=US" ],
-      "platformVersion" : 3,
-      "serial" : 1541505384742
-    },
-      {
-       "addresses" : [ "localhost:10009" ],
-       "legalIdentitiesAndCerts" : [ "O=Dealer, L=New York, C=US" ],
-       "platformVersion" : 3,
-       "serial" : 1541505384743
-      }
+    node {
+        name "O=Notary,L=London,C=GB"
+        notary = [validating : false]
+        p2pPort 10002
+        rpcSettings {
+            address("localhost:10003")
+            adminAddress("localhost:10043")
+        }
+    }
+    node {
+        name "O=PlayerA,L=London,C=GB"
+        p2pPort 10005
+        rpcSettings {
+            address("localhost:10006")
+            adminAddress("localhost:10046")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+    node {
+        name "O=PlayerB,L=New York,C=US"
+        p2pPort 10008
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10047")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
+    node {
+        name "O=Dealer,L=New York,C=US"
+        p2pPort 10011
+        rpcSettings {
+            address("localhost:10010")
+            adminAddress("localhost:10045")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+    }
     ]
     
     Tue Nov 06 12:30:11 GMT 2018>>> 
