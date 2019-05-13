@@ -1,12 +1,7 @@
 package com.poker.model
 
+import net.corda.core.identity.AbstractParty
+
 data class Player (
-
-        var cards: Array<Card?> = arrayOfNulls<Card>(2),
-
-        var rankingEnum: RankingEnum? = null,
-
-        var rankingList: List<Card>? = null,
-
-        var highCard: Card? = null
-        )
+        val party: AbstractParty
+       )
