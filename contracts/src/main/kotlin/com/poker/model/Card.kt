@@ -11,7 +11,7 @@ data class Card(val suit:CardSuitEnum , val rank:CardRankEnum){
     }
 
     override fun hashCode(): Int {
-        return (rank.ordinal + suit.ordinal)
+        return (suit.ordinal * 10 + rank.ordinal)
     }
 
     override fun equals(obj: Any?): Boolean {
