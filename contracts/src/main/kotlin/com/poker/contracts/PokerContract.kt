@@ -1,8 +1,10 @@
 package com.poker.contracts
 
-import net.corda.core.contracts.CommandData
-import net.corda.core.contracts.Contract
+import com.poker.states.GameState
+import net.corda.core.contracts.*
+import net.corda.core.contracts.Requirements.using
 import net.corda.core.transactions.LedgerTransaction
+import java.security.PublicKey
 
 // ************
 // * Contract *
@@ -17,67 +19,46 @@ class PokerContract : Contract {
     // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
     // does not throw an exception.
     override fun verify(tx: LedgerTransaction) {
-        // Verification logic goes here.
+        val command = tx.commands.requireSingleCommand<Commands>()
+        val setOfSigners = command.signers.toSet()
+        when (command.value) {
+            is Commands.StartGame -> verifyStartGame(tx, setOfSigners)
+            is Commands.Deal -> verifyDeal(tx, setOfSigners)
+            is Commands.DecideWinner -> verifyDecideWinner(tx, setOfSigners)
+            else -> throw IllegalArgumentException("Unrecognised command.")
+        }
     }
 
     // Used to indicate the transaction's intent.
     interface Commands : CommandData {
-        class Action : Commands //TODO : Safely remove
+        class StartGame : TypeOnlyCommandData(), Commands
+        class Deal : TypeOnlyCommandData(), Commands
+        class DecideWinner : TypeOnlyCommandData(), Commands
+    }
 
-        class PlaceSmallBlindBet : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "On place small bet, no input states must be consumed."
-            }
-        }
+    private fun keysFromParticipants(gameState: GameState): Set<PublicKey> {
+        return gameState.participants.map {
+            it.owningKey
+        }.toSet()
+    }
 
-        class PlaceBigBet : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class TwoFaceDownToPlayer : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class DecideBet : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class ThreeCards : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class OneCard : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class OnCall : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class OnRaise : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
-        class OnFold : Commands {
-            companion object {
-                const val CONTRACT_RULE_INPUTS =
-                        "TODO"
-            }
-        }
+    // This only allows one gamestate issuance per transaction.
+    private fun verifyStartGame(tx: LedgerTransaction, signers: Set<PublicKey>) = requireThat {
+        "No inputs should be consumed when issuing an gamestate." using (tx.inputStates.isEmpty())
+        "Only one gamestate state should be created when issuing an gamestate." using (tx.outputStates.size == 1)
+        val gameState = tx.outputsOfType<GameState>().single()
+//        "A newly issued gamestate must have a positive amount." using (gamestate. .amount.quantity > 0)
+
+    }
+    private fun verifyDeal(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+        val gameState = tx.outputsOfType<GameState>().single()
+        //        "The dealer and player cannot be the same identity." using (gamestate.borrower != gamestate.lender)
+        "Both dealer and player together only may sign gamestate issue transaction." using
+                (signers == keysFromParticipants(gameState))
+        TODO("Yet to implement")
+    }
+
+    private fun verifyDecideWinner(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+        TODO("Yet to implement")
     }
 }

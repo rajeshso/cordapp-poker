@@ -26,6 +26,11 @@ data class PlayerState(var cards: Array<Card?> = arrayOfNulls<Card>(2),
 
                        override val participants: List<AbstractParty> = listOf(),
                        override val linearId: UniqueIdentifier) : LinearState, QueryableState {
+
+    fun deal(initCards: Array<Card?>) = copy(
+            cards = initCards
+    )
+
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
