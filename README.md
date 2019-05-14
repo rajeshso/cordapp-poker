@@ -32,6 +32,16 @@ If you would prefer to use the built in IntelliJ JUnit test runner, you can run 
 copy your quasar JAR file to the lib directory. You will then need to specify ``-javaagent:lib/quasar.jar``
 and set the run directory to the project root directory for each test.
 
+## Building the nodes
+./build.sh would build the project with the four nodes:
+Notary
+Dealer
+Player A
+Player B
+
+If you are looking to run only unit tests, you may run the script :
+./test.sh
+
 ## Running the nodes
 
 See https://docs.corda.net/tutorial-cordapp.html#running-the-example-cordapp.
@@ -148,3 +158,21 @@ While the sole poker endpoint is served on:
 
 For a guided example of how to extend this poker, see the Hello, World! tutorial 
 [here](https://docs.corda.net/hello-world-introduction.html).
+
+### Completed Development Tasks
+Domain Model
+Basic States
+WIP - Contracts
+
+### TODO Tasks
+Contracts
+Publish Game State
+Game Flows for Deal
+Game Flows for Flop
+Game Flows for River
+Game Flows for Turn
+Game Flows for Winner
+Game Flows for Start
+Game Flows for End
+
+Betting.....
