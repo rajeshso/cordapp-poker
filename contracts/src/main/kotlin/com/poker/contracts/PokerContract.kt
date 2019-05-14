@@ -24,7 +24,10 @@ class PokerContract : Contract {
         when (command.value) {
             is Commands.StartGame -> verifyStartGame(tx, setOfSigners)
             is Commands.Deal -> verifyDeal(tx, setOfSigners)
-            is Commands.DecideWinner -> verifyDecideWinner(tx, setOfSigners)
+            is Commands.Flop -> verifyDeal(tx, setOfSigners)
+            is Commands.River -> verifyDeal(tx, setOfSigners)
+            is Commands.Turn -> verifyDeal(tx, setOfSigners)
+            is Commands.Winner -> verifyWinner(tx, setOfSigners)
             else -> throw IllegalArgumentException("Unrecognised command.")
         }
     }
@@ -33,7 +36,10 @@ class PokerContract : Contract {
     interface Commands : CommandData {
         class StartGame : TypeOnlyCommandData(), Commands
         class Deal : TypeOnlyCommandData(), Commands
-        class DecideWinner : TypeOnlyCommandData(), Commands
+        class Flop : TypeOnlyCommandData(), Commands
+        class River : TypeOnlyCommandData(), Commands
+        class Turn : TypeOnlyCommandData(), Commands
+        class Winner : TypeOnlyCommandData(), Commands
     }
 
     private fun keysFromParticipants(gameState: GameState): Set<PublicKey> {
@@ -58,7 +64,16 @@ class PokerContract : Contract {
         TODO("Yet to implement")
     }
 
-    private fun verifyDecideWinner(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+    private fun verifyFlop(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+        TODO("Yet to implement")
+    }
+    private fun verifyRiver(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+        TODO("Yet to implement")
+    }
+    private fun verifyTurn(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+        TODO("Yet to implement")
+    }
+    private fun verifyWinner(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
         TODO("Yet to implement")
     }
 }
