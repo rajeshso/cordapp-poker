@@ -53,7 +53,7 @@ class PokerContract : Contract {
         "No inputs should be consumed when issuing an gamestate." using (tx.inputStates.isEmpty())
         "Only one gamestate state should be created when issuing an gamestate." using (tx.outputStates.size == 1)
         val gameState = tx.outputsOfType<GameState>().single()
-//        "A newly issued gamestate must have a positive amount." using (gamestate. .amount.quantity > 0)
+//        "A newly issued gamestate must have a zero amount." using (gamestate. .amount.quantity > 0)
 
     }
     private fun verifyDeal(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
