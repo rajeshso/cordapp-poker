@@ -5,7 +5,7 @@ import kotlin.NoSuchElementException
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-class Deck (_shuffledCards: List<Card>) {
+class Deck(_shuffledCards: List<Card>) {
     private val cards = _shuffledCards
     private var index = 0
     val signature = cards.joinToString(",")
@@ -14,7 +14,7 @@ class Deck (_shuffledCards: List<Card>) {
         return if (index < cards.size) {
             cards.get(index++)
         } else {
-            throw NoSuchElementException("Deck ran out of cards");
+            throw NoSuchElementException("Deck ran out of cards")
         }
     }
 
@@ -32,10 +32,10 @@ class Deck (_shuffledCards: List<Card>) {
 
         fun newSheffledDeck(): Deck {
             // Created a new Deck of Shuffled Cards
-            val cards = ArrayList<Card>(52);
+            val cards = ArrayList<Card>(52)
             cards.addAll(allCards)
-            Collections.shuffle(cards, Random());
-            return Deck(cards);
+            Collections.shuffle(cards, Random())
+            return Deck(cards)
         }
     }
 }

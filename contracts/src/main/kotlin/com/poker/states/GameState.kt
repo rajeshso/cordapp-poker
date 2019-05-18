@@ -1,8 +1,11 @@
 package com.poker.states
 
 import com.poker.contracts.PokerContract
-import com.poker.model.*
-import net.corda.core.contracts.*
+import com.poker.model.Card
+import com.poker.model.Player
+import net.corda.core.contracts.BelongsToContract
+import net.corda.core.contracts.LinearState
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
@@ -15,21 +18,21 @@ import java.time.LocalDateTime
 data class GameState(
         override val linearId: UniqueIdentifier,
         override val dealer: AbstractParty,
-       // var deck: Deck = Deck(), // TODO Move the deck outside the Game State or hide the deck to players
+        // var deck: Deck = Deck(), // TODO Move the deck outside the Game State or hide the deck to players
         var players: MutableList<Player>,
         var tableCards: List<Card>,
         val lastChange: LocalDateTime = LocalDateTime.now()
-        ) :  LinearState, OwnerState, ObservableState, QueryableState {
+) : LinearState, OwnerState, ObservableState, QueryableState {
 
-    override val participants: List<AbstractParty> get() = listOfNotNull(dealer) + players.map {it.party}
+    override val participants: List<AbstractParty> get() = listOfNotNull(dealer) + players.map { it.party }
 
     override val observers: List<AbstractParty>
-        get() = players.map {it.party}
+        get() = players.map { it.party }
 
-    fun addTableCards( newTableCards: MutableList<Card>) = copy(
+    fun addTableCards(newTableCards: MutableList<Card>) = copy(
             tableCards = tableCards + newTableCards,
             lastChange = LocalDateTime.now()
-            )
+    )
 
     override fun generateMappedObject(schema: MappedSchema): PersistentState {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -38,7 +41,6 @@ data class GameState(
     override fun supportedSchemas(): Iterable<MappedSchema> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 
 
 }

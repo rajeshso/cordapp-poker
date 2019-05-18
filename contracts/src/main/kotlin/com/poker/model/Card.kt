@@ -3,7 +3,7 @@ package com.poker.model
 import net.corda.core.serialization.CordaSerializable
 
 @CordaSerializable
-data class Card(val suit:CardSuitEnum , val rank:CardRankEnum){
+data class Card(val suit: CardSuitEnum, val rank: CardRankEnum) {
     fun getRankToInt(): Int = rank.ordinal
 
     override fun toString(): String {

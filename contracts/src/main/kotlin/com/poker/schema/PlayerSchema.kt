@@ -12,7 +12,7 @@ object PlayerSchemaV1 : MappedSchema(
         schemaFamily = PlayerSchema.javaClass,
         version = 1,
         mappedTypes = listOf(PersistentPlayerSchemaV1::class.java, CardSchemaV1::class.java
-                )) {
+        )) {
     @Entity
     @Table(name = "player_state")
     class PersistentPlayerSchemaV1(

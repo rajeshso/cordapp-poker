@@ -10,8 +10,8 @@ import org.junit.Test
 
 class FlowTests {
     private val network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
-        TestCordapp.findCordapp("com.poker.contracts"),
-        TestCordapp.findCordapp("com.poker.flows")
+            TestCordapp.findCordapp("com.poker.contracts"),
+            TestCordapp.findCordapp("com.poker.flows")
     )))
     private val a = network.createNode()
     private val b = network.createNode()

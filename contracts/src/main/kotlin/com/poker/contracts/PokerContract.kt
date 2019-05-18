@@ -56,7 +56,8 @@ class PokerContract : Contract {
 //        "A newly issued gamestate must have a zero amount." using (gamestate. .amount.quantity > 0)
 
     }
-    private fun verifyDeal(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+
+    private fun verifyDeal(tx: LedgerTransaction, signers: Set<PublicKey>): Unit {
         val gameState = tx.outputsOfType<GameState>().single()
         //        "The dealer and player cannot be the same identity." using (gamestate.borrower != gamestate.lender)
         "Both dealer and player together only may sign gamestate issue transaction." using
@@ -64,16 +65,19 @@ class PokerContract : Contract {
         TODO("Yet to implement")
     }
 
-    private fun verifyFlop(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+    private fun verifyFlop(tx: LedgerTransaction, signers: Set<PublicKey>): Unit {
         TODO("Yet to implement")
     }
-    private fun verifyRiver(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+
+    private fun verifyRiver(tx: LedgerTransaction, signers: Set<PublicKey>): Unit {
         TODO("Yet to implement")
     }
-    private fun verifyTurn(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+
+    private fun verifyTurn(tx: LedgerTransaction, signers: Set<PublicKey>): Unit {
         TODO("Yet to implement")
     }
-    private fun verifyWinner(tx: LedgerTransaction, signers: Set<PublicKey>) : Unit {
+
+    private fun verifyWinner(tx: LedgerTransaction, signers: Set<PublicKey>): Unit {
         TODO("Yet to implement")
     }
 }
