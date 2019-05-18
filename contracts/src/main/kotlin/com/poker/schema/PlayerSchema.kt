@@ -44,9 +44,9 @@ object PlayerSchemaV1 : MappedSchema(
             @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
             val cards: Set<CardSchemaV1>,
 
-            //TODO To find a workaround for one to many of parties
-/*            @OneToMany(cascade = arrayOf(CascadeType.ALL), mappedBy = "owningKey")
-            val participants: Set<AbstractParty>,*/
+            //Note: Participants should be CordaX500Name names
+            @OneToMany(cascade = arrayOf(CascadeType.ALL))
+            val participants: Set<String>,
 
             @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
             val rankingList: List<CardSchemaV1>,
