@@ -16,16 +16,13 @@ import net.corda.core.schemas.QueryableState
 // * State *
 // *********
 @BelongsToContract(PokerContract::class)
-data class PlayerState(var cards: Array<Card?> = arrayOfNulls<Card>(2),
-
+data class PlayerState(override val participants: List<AbstractParty> = listOf(),
+                       override val linearId: UniqueIdentifier,
+                       var cards: Array<Card?> = arrayOfNulls<Card>(2),
                        var rankingEnum: RankingEnum? = null,
-
                        var rankingList: List<Card>? = null,
-
-                       var highCard: Card? = null,
-
-                       override val participants: List<AbstractParty> = listOf(),
-                       override val linearId: UniqueIdentifier) : LinearState, QueryableState {
+                       var highCard: Card? = null
+) : LinearState, QueryableState {
 
     fun deal(initCards: Array<Card?>) = copy(
             cards = initCards

@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 data class GameState(
         override val linearId: UniqueIdentifier,
         override val dealer: AbstractParty,
-        var deck: Deck = Deck, // TODO Move the deck outside the Game State or hide the deck to players
+       // var deck: Deck = Deck(), // TODO Move the deck outside the Game State or hide the deck to players
         var players: MutableList<Player>,
         var tableCards: List<Card>,
         val lastChange: LocalDateTime = LocalDateTime.now()
