@@ -1,5 +1,6 @@
 package com.poker.schema
 
+import com.poker.model.RankingEnum
 import net.corda.core.identity.AbstractParty
 import net.corda.core.schemas.MappedSchema
 import net.corda.core.schemas.PersistentState
@@ -35,6 +36,9 @@ object PlayerSchemaV1 : MappedSchema(
 
             @Column(name = "playerB")
             val playerB: AbstractParty,
+
+            @Enumerated(EnumType.STRING)
+            val rankingEnum: RankingEnum,
 
             @OneToMany(cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
             val rankingList: List<CardSchemaV1>,

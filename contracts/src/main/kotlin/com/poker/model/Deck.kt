@@ -30,7 +30,7 @@ class Deck(_shuffledCards: List<Card>) {
             }
         }
 
-        fun newSheffledDeck(): Deck {
+        fun newShuffledDeck(): Deck {
             // Created a new Deck of Shuffled Cards
             val cards = ArrayList<Card>(52)
             cards.addAll(allCards)

@@ -1,5 +1,8 @@
 apply plugin: 'net.corda.plugins.cordapp'
 
+configurations {
+    mapstruct
+}
 cordapp {
     targetPlatformVersion corda_platform_version.toInteger()
     minimumPlatformVersion corda_platform_version.toInteger()
@@ -18,4 +21,10 @@ dependencies {
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
 
     testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
+//    implementation "org.mapstruct:mapstruct:$mapstruct_version"
+    compile( "org.mapstruct:mapstruct:$mapstruct_version")
+    //annotationProcessor "org.mapstruct:mapstruct-processor:$mapstruct_version"
+    mapstruct( "org.mapstruct:mapstruct-processor:$mapstruct_version" )
+
+
 }

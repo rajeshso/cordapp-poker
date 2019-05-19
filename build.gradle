@@ -11,8 +11,8 @@ buildscript {
         slf4j_version = '1.7.25'
         log4j_version = '2.11.2'
         corda_platform_version = '4'
+        mapstruct_version = '1.3.0.Final'
     }
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -81,6 +81,7 @@ dependencies {
     cordaCompile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
     cordaCompile "org.apache.logging.log4j:log4j-web:${log4j_version}"
     cordaCompile "org.slf4j:jul-to-slf4j:$slf4j_version"
+
 }
 
 cordapp {
