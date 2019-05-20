@@ -1,6 +1,7 @@
 package com.poker.schema
 
 import com.poker.model.Card
+import com.poker.states.GameState
 import com.poker.states.PlayerState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
@@ -8,19 +9,19 @@ import org.mapstruct.*
 import org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT
 import java.util.*
 
-
+//TODO: The mapping is WIP
 @Mapper(nullValueMappingStrategy = RETURN_DEFAULT, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-interface PlayerMapper     {
+interface GameMapper     {
 
     @Mappings(Mapping(target = "linearId", source = "linearId", qualifiedByName = ["toUUID"]),
-            Mapping(target = "player", source = "player"),
-            Mapping(target = "cards", source = "cards", qualifiedByName = ["toCardSchemaV1Set"]),
+            Mapping(target = "playerA", source = "playerA"),
+            Mapping(target = "playerB", source = "playerB"),
+            Mapping(target = "tableCards", source = "tableCards", qualifiedByName = ["toPlayerB"]),
             Mapping(target = "playerA", source = "participants", qualifiedByName = ["toPlayerA"]),
-            Mapping(target = "playerB", source = "participants", qualifiedByName = ["toPlayerB"]),
             Mapping(target = "rankingEnum", source = "rankingEnum"),
             Mapping(target = "rankingList", source = "rankingList", qualifiedByName = ["toRankingList"]),
             Mapping(target = "highCard", source = "highCard", qualifiedByName = ["toCardSchemaV1"]))
-    fun toPersistentPlayerSchemaV1(playerState: PlayerState): PlayerSchemaV1.PersistentPlayerSchemaV1
+    fun toPersistentGameSchemaV1(gameState: GameState): GameSchemaV1.PersistentGameSchemaV1
 
     @Named("toCardSchemaV1Set")
     fun toCardSchemaV1Set(cards: Array<Card?>) : Set<CardSchemaV1>

@@ -48,7 +48,7 @@ class PokerContract : Contract {
         }.toSet()
     }
 
-    // This only allows one gamestate issuance per transaction.
+    // Given a GameState, verify if
     private fun verifyStartGame(tx: LedgerTransaction, signers: Set<PublicKey>) = requireThat {
         "No inputs should be consumed when issuing an gamestate." using (tx.inputStates.isEmpty())
         "Only one gamestate state should be created when issuing an gamestate." using (tx.outputStates.size == 1)

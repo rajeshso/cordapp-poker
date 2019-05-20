@@ -18,16 +18,16 @@ import java.time.LocalDateTime
 data class GameState(
         override val linearId: UniqueIdentifier,
         override val dealer: AbstractParty,
-        // var deck: Deck = Deck(), // TODO Move the deck outside the Game State or hide the deck to players
-        var players: MutableList<Player>,
+        val playerA: AbstractParty,
+        val playerB: AbstractParty,
         var tableCards: List<Card>,
         val lastChange: LocalDateTime = LocalDateTime.now()
 ) : LinearState, OwnerState, ObservableState, QueryableState {
 
-    override val participants: List<AbstractParty> get() = listOfNotNull(dealer) + players.map { it.party }
+    override val participants: List<AbstractParty> get() = listOf(dealer, playerA, playerB)
 
     override val observers: List<AbstractParty>
-        get() = players.map { it.party }
+        get() = listOf(playerA, playerB)
 
     fun addTableCards(newTableCards: MutableList<Card>) = copy(
             tableCards = tableCards + newTableCards,

@@ -17,6 +17,7 @@ import net.corda.core.schemas.QueryableState
 @BelongsToContract(PokerContract::class)
 data class PlayerState(override val participants: List<AbstractParty> = listOf(),
                        override val linearId: UniqueIdentifier,
+                       val player: AbstractParty,
                        var cards: Array<Card?> = arrayOfNulls<Card>(2),
                        var rankingEnum: RankingEnum? = null,
                        var rankingList: List<Card>? = null,
