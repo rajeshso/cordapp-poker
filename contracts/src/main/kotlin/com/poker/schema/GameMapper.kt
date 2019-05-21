@@ -1,13 +1,6 @@
 package com.poker.schema
 
-import com.poker.model.Card
-import com.poker.states.GameState
-import com.poker.states.PlayerState
-import net.corda.core.contracts.UniqueIdentifier
-import net.corda.core.identity.AbstractParty
-import org.mapstruct.*
-import org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT
-import java.util.*
+/*
 
 //TODO: The mapping is WIP
 @Mapper(nullValueMappingStrategy = RETURN_DEFAULT, unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -42,3 +35,4 @@ interface GameMapper     {
     @Named("toUUID")
     fun toUUID(uniqueID: UniqueIdentifier): UUID = uniqueID.id
 }
+*/
