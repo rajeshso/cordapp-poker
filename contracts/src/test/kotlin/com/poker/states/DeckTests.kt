@@ -33,14 +33,14 @@ class DeckTests {
     @Test
     fun `deck pops 52 cards`() {
         repeat(52) {
-            var card = deck.pop()
+            deck.pop()
         }
     }
 
     @Test(expected = NoSuchElementException::class)
     fun `deck throws Exception after 52'nd pop`() {
         repeat(52) {
-            var card = deck.pop()
+            deck.pop()
         }
         deck.pop()
     }
