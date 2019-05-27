@@ -12,6 +12,8 @@ import net.corda.core.identity.Party
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
+import net.corda.core.utilities.ProgressTracker.Step
+import net.corda.core.utilities.minutes
 
 // *********
 // * Flows *
@@ -19,30 +21,62 @@ import net.corda.core.utilities.ProgressTracker
 @InitiatingFlow
 @StartableByRPC
 class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<UniqueIdentifier>() {
-    override val progressTracker = ProgressTracker()
+    /**
+     * Tracks progress throughout the flows call execution.
+     */
+    override val progressTracker: ProgressTracker
+        get() {
+            return ProgressTracker(
+                    INITIALISING,
+                    BUILDING,
+                    SIGNING,
+                    COLLECTING,
+                    FINALISING
+            )
+        }
+
+    companion object {
+        object INITIALISING : Step("Performing initial steps - create game state.")
+        object BUILDING : Step("Building and verifying transaction - Start Game tx with gamestate as output and no input")
+        object SIGNING : Step("Dealer Signing transaction.")
+        object COLLECTING : Step("Collecting signatures from the players.") {
+            override fun childProgressTracker() = CollectSignaturesFlow.tracker()
+        }
+
+        object FINALISING : Step("Finalising transaction. - Full Final signature on the vault") {
+            override fun childProgressTracker() = FinalityFlow.tracker()
+        }
+
+        fun tracker() = ProgressTracker(INITIALISING, BUILDING, SIGNING, COLLECTING, FINALISING)
+    }
 
     @Suspendable
-    override fun call() : UniqueIdentifier {
-        // Initiator flow logic goes here.
+    override fun call(): UniqueIdentifier {
+        // Step 1. Initialisation.
+        progressTracker.currentStep = INITIALISING
         val dealer = serviceHub.myInfo.legalIdentities.first()
-        // Stage 1.
-        val gameState: GameState = GameState(UniqueIdentifier(), dealer,players, emptyList(),RoundEnum.Started)
+        val gameState: GameState = GameState(UniqueIdentifier(), dealer, players, emptyList(), RoundEnum.Started)
+
+        // Step 2. Building.
+        progressTracker.currentStep = BUILDING
         val txCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
         val txBuilder = TransactionBuilder(notary)
                 .addOutputState(gameState)
                 .addCommand(txCommand)
-
-        // Stage 2
+                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
-        // Stage 3
+        // Step 3. Sign the transaction.
+        progressTracker.currentStep = SIGNING
         val dealerSignedTx = serviceHub.signInitialTransaction(txBuilder)
 
-        //Stage 4
+        // Step 4. Get the counter-party (Players) signature.
+        progressTracker.currentStep = COLLECTING
         val otherPartySessions = players.map { initiateFlow(it) }
         val fullySignedTx = subFlow(CollectSignaturesFlow(dealerSignedTx, otherPartySessions.toSet()))
 
-        // Step 5
+        // Step 5. Finalise the transaction.
+        progressTracker.currentStep = FINALISING
         val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
         return gameState.linearId
     }
@@ -57,7 +91,7 @@ class AcceptStartGame(val counterpartySession: FlowSession) : FlowLogic<SignedTr
                 val output = stx.tx.outputs.single().data
                 "This must be an Game Start transaction." using (output is GameState)
                 val gameState = output as GameState
-               // "I won't accept IOUs with a value over 100." using (gameState.value <= 100)
+                // "I won't accept IOUs with a value over 100." using (gameState.value <= 100)
             }
         }
         val txId = subFlow(signTransactionFlow).id

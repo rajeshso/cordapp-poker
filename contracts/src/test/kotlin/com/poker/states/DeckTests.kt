@@ -4,27 +4,20 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
 import assertk.assertions.isNotNull
-import net.corda.testing.node.MockNetwork
-import net.corda.testing.node.MockNetworkParameters
-import net.corda.testing.node.TestCordapp
-import org.junit.After
+import net.corda.core.identity.Party
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 
-//TODO: Mockito the party and remove the Corda Mocknetwork
+
 class DeckTests {
-    private val network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
-            TestCordapp.findCordapp("com.poker.contracts")
-    )))
-    private val dealer = network.createNode()
+    val mockParty = Mockito.mock(Party::class.java)
 
-    var deck = Deck.newShuffledDeck(dealer.info.legalIdentities.first())
+    var deck = Deck.newShuffledDeck(mockParty)
 
     @Before
     fun setup(): Unit {
-        network.runNetwork()
-        deck = Deck.newShuffledDeck(dealer.info.legalIdentities.first())
-        network.startNodes()
+        deck = Deck.newShuffledDeck(mockParty)
     }
 
     @Test
@@ -60,11 +53,6 @@ class DeckTests {
         }
         val after = deck.signature
         assertThat(before).isEqualTo(after)
-    }
-
-    @After
-    fun close() {
-        network.stopNodes()
     }
 }
 
