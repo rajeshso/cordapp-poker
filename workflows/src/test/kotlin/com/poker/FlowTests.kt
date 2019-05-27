@@ -2,6 +2,9 @@ package com.poker
 
 import com.poker.flows.AcceptStartGame
 import com.poker.flows.StartGameFlow
+import com.poker.model.RoundEnum
+import com.poker.states.GameState
+import net.corda.core.node.services.queryBy
 import net.corda.core.utilities.getOrThrow
 import net.corda.core.utilities.loggerFor
 import net.corda.testing.node.MockNetwork
@@ -10,6 +13,8 @@ import net.corda.testing.node.TestCordapp
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class FlowTests {
     companion object {
@@ -37,7 +42,7 @@ class FlowTests {
     fun tearDown() = network.stopNodes()
 
     @Test
-    fun `dummy test`() {
+    fun `Starting the game should return a UID and all its state values are initialized`() {
         val notaryNode = network.defaultNotaryNode.info.legalIdentities.first()
         val flow = dealer.startFlow(StartGameFlow(listOf(
                 playerA.info.legalIdentities.first(),
@@ -46,5 +51,14 @@ class FlowTests {
         network.runNetwork()
         val uid = flow.getOrThrow()
         log.info("game id: $uid")
+        assertNotNull(uid.id)
+        val vault = dealer.services.vaultService.queryBy<GameState>()
+        assertTrue(vault.states.size==1)
+        val stateAndRef = vault.states.first()
+        assertTrue(stateAndRef.state.notary == notaryNode)
+        val gameState = stateAndRef.state.data
+        assertTrue(gameState.players == listOf(playerA.info.legalIdentities.first(), playerB.info.legalIdentities.first()))
+        assertTrue(gameState.rounds == RoundEnum.Started)
+        assertTrue(gameState.tableCards.isEmpty())
     }
 }

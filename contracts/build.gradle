@@ -25,6 +25,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstruct_version"
     //compile( "org.mapstruct:mapstruct:$mapstruct_version")
     //mapstruct( "org.mapstruct:mapstruct-processor:$mapstruct_version" )
+    testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.16'
 
 
 }

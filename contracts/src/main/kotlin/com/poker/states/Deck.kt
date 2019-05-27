@@ -1,14 +1,22 @@
-package com.poker.model
+package com.poker.states
 
+import com.poker.model.Card
+import com.poker.model.CardRankEnum
+import com.poker.model.CardSuitEnum
+import net.corda.core.contracts.ContractState
+import net.corda.core.identity.AbstractParty
 import java.util.*
 import kotlin.NoSuchElementException
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-class Deck(_shuffledCards: List<Card>) {
+class Deck(_shuffledCards: List<Card>,
+           val dealer: AbstractParty) : ContractState {
+
+    override val participants: List<AbstractParty> get() = listOf(dealer)
     private val cards = _shuffledCards
     private var index = 0
-    val signature = cards.joinToString(",")
+    val signature get() =  cards.joinToString(",")
 
     fun pop(): Card {
         return if (index < cards.size) {
@@ -17,6 +25,8 @@ class Deck(_shuffledCards: List<Card>) {
             throw NoSuchElementException("Deck ran out of cards")
         }
     }
+
+
 
     companion object {
         private val allCards: HashSet<Card>
@@ -30,12 +40,12 @@ class Deck(_shuffledCards: List<Card>) {
             }
         }
 
-        fun newShuffledDeck(): Deck {
+        fun newShuffledDeck(dealer: AbstractParty): Deck {
             // Created a new Deck of Shuffled Cards
             val cards = ArrayList<Card>(52)
             cards.addAll(allCards)
             Collections.shuffle(cards, Random())
-            return Deck(cards)
+            return Deck(cards, dealer)
         }
     }
 }
