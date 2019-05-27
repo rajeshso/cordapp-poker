@@ -13,11 +13,11 @@ import org.mockito.Mockito
 class DeckTests {
     val mockParty = Mockito.mock(Party::class.java)
 
-    var deck = Deck.newShuffledDeck(mockParty)
+    var deck = Deck(mockParty)
 
     @Before
     fun setup(): Unit {
-        deck = Deck.newShuffledDeck(mockParty)
+        deck = Deck(mockParty)
     }
 
     @Test

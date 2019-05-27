@@ -3,6 +3,7 @@ package com.poker.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.poker.contracts.PokerContract
 import com.poker.model.RoundEnum
+import com.poker.states.Deck
 import com.poker.states.GameState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
@@ -29,6 +30,7 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
             return ProgressTracker(
                     INITIALISING,
                     BUILDING,
+                    DECKING,
                     SIGNING,
                     COLLECTING,
                     FINALISING
@@ -38,6 +40,7 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
     companion object {
         object INITIALISING : Step("Performing initial steps - create game state.")
         object BUILDING : Step("Building and verifying transaction - Start Game tx with gamestate as output and no input")
+        object DECKING : Step("Build Deck and store in the Dealer's vault")
         object SIGNING : Step("Dealer Signing transaction.")
         object COLLECTING : Step("Collecting signatures from the players.") {
             override fun childProgressTracker() = CollectSignaturesFlow.tracker()
@@ -47,7 +50,7 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
 
-        fun tracker() = ProgressTracker(INITIALISING, BUILDING, SIGNING, COLLECTING, FINALISING)
+        fun tracker() = ProgressTracker(INITIALISING, BUILDING, DECKING, SIGNING, COLLECTING, FINALISING)
     }
 
     @Suspendable
@@ -66,16 +69,28 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
                 .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
-        // Step 3. Sign the transaction.
+        // Step 3. Decking.
+        progressTracker.currentStep = DECKING
+        val deck: Deck = Deck(dealer)
+        val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
+        val txInternalBuilder = TransactionBuilder(notary)
+                .addOutputState(deck)
+                .addCommand(txInternalCommand)
+                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+        txInternalBuilder.verify(serviceHub)
+        val dealerSignedTxForDecking = serviceHub.signInitialTransaction(txInternalBuilder)
+        serviceHub.recordTransactions(dealerSignedTxForDecking)
+
+        // Step 4. Sign the transaction.
         progressTracker.currentStep = SIGNING
         val dealerSignedTx = serviceHub.signInitialTransaction(txBuilder)
 
-        // Step 4. Get the counter-party (Players) signature.
+        // Step 5. Get the counter-party (Players) signature.
         progressTracker.currentStep = COLLECTING
         val otherPartySessions = players.map { initiateFlow(it) }
         val fullySignedTx = subFlow(CollectSignaturesFlow(dealerSignedTx, otherPartySessions.toSet()))
 
-        // Step 5. Finalise the transaction.
+        // Step 6. Finalise the transaction.
         progressTracker.currentStep = FINALISING
         val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
         return gameState.linearId

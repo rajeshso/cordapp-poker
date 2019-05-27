@@ -1,21 +1,26 @@
 package com.poker.states
 
+import com.poker.contracts.DeckContract
 import com.poker.model.Card
 import com.poker.model.CardRankEnum
 import com.poker.model.CardSuitEnum
-import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.BelongsToContract
+import net.corda.core.contracts.CommandAndState
+import net.corda.core.contracts.OwnableState
 import net.corda.core.identity.AbstractParty
+import net.corda.core.serialization.CordaSerializable
 import java.util.*
 import kotlin.NoSuchElementException
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-class Deck(_shuffledCards: List<Card>,
-           val dealer: AbstractParty) : ContractState {
+@BelongsToContract(DeckContract::class)
+@CordaSerializable
+data class Deck(override val owner: AbstractParty) : OwnableState {
 
-    override val participants: List<AbstractParty> get() = listOf(dealer)
-    private val cards = _shuffledCards
-    private var index = 0
+    override val participants: List<AbstractParty> = listOf(owner)
+
+    var index = 0
     val signature get() =  cards.joinToString(",")
 
     fun pop(): Card {
@@ -26,26 +31,23 @@ class Deck(_shuffledCards: List<Card>,
         }
     }
 
-
-
     companion object {
-        private val allCards: HashSet<Card>
+        val cards: List<Card>
 
         init {
-            allCards = HashSet<Card>()
+            val allCards: HashSet<Card> = HashSet<Card>()
             for (suit in CardSuitEnum.values()) {
                 for (rank in CardRankEnum.values()) {
                     allCards.add(Card(suit, rank))
                 }
             }
-        }
-
-        fun newShuffledDeck(dealer: AbstractParty): Deck {
             // Created a new Deck of Shuffled Cards
-            val cards = ArrayList<Card>(52)
+            cards = ArrayList<Card>(52)
             cards.addAll(allCards)
             Collections.shuffle(cards, Random())
-            return Deck(cards, dealer)
         }
+    }
+    override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
