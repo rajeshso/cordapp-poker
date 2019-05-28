@@ -3,11 +3,11 @@ package com.poker.util
 import org.junit.Test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotEqualTo
 import com.poker.model.Card
 import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
 import com.poker.model.Player
+import com.poker.model.RankingEnum.*
 import com.poker.states.Deck
 import net.corda.core.identity.Party
 import org.mockito.Mockito
@@ -17,27 +17,56 @@ class GameUtilTest {
 
     var deck = Deck(mockParty)
 
-/*    @Test
+    @Test
     fun testDrawGameTwoPlayers() {
         //Basic tests
         val game = GameUtil
-        val player = Player(mockParty)
-        val dealer = Player(mockParty)
-        val tableCards = emptyList<Card>()
-        game.newGame(Deck(), player, dealer)
-        game.deal()
-        game.callFlop()
-        game.betRiver()
-        game.betTurn()
+        val playerA = Player(mockParty)
+        val playerB = Player(mockParty)
+        val playerList = mutableListOf<Player>(playerA, playerB)
+        val dealer =mockParty
+        val tableCards = mutableListOf<Card>()
+        val deck: Deck = Deck(dealer)
+
+        game.deal(playerList, tableCards, deck)
+        game.callFlop(playerList, tableCards, deck)
+        game.betRiver(playerList, tableCards, deck)
+        game.betTurn(playerList, tableCards, deck)
+        tableCards.clear()
         tableCards.add(Card(SPADES, CARD_10))
-        game.getTableCards().add(Card(SPADES, ACE))
-        dealer.getCards()[0] = Card(DIAMONDS, CARD_2)
-        dealer.getCards()[1] = Card(SPADES, CARD_2)
-        player.getCards()[0] = Card(CLUBS, CARD_2)
-        player.getCards()[1] = Card(HEARTS, CARD_2)
-        val winnerList = game.getWinner()
-        assertEquals(2, winnerList.size)
-        assertEquals(ONE_PAIR, dealer.getRankingEnum())
-        assertEquals(ONE_PAIR, player.getRankingEnum())
-    }*/
+        tableCards.add(Card(SPADES, ACE))
+        playerA.myCards = listOf(Card(DIAMONDS, CARD_2), Card(SPADES, CARD_2))
+        playerB.myCards = listOf(Card(CLUBS, CARD_2), Card(HEARTS, CARD_2))
+        val winnerList = game.getWinner(playerList, tableCards)
+        assertThat(winnerList.size).isEqualTo(2)
+        assertThat(playerA.rankingEnum).isEqualTo(ONE_PAIR)
+        assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
+    }
+
+    @Test
+    fun testPlayerWinDrawGameBestRanking() {
+        //Basic tests
+        val game = GameUtil
+        val playerA = Player(mockParty)
+        val playerB = Player(mockParty)
+        val playerList = mutableListOf<Player>(playerA, playerB)
+        val dealer =mockParty
+        val tableCards = mutableListOf<Card>()
+        val deck: Deck = Deck(dealer)
+
+        game.deal(playerList, tableCards, deck)
+        game.callFlop(playerList, tableCards, deck)
+        game.betRiver(playerList, tableCards, deck)
+        game.betTurn(playerList, tableCards, deck)
+        tableCards.clear()
+        tableCards.add(Card(SPADES, CARD_10))
+        tableCards.add(Card(SPADES, ACE))
+        playerA.myCards = listOf(Card(CLUBS, CARD_10), Card(HEARTS, CARD_2))
+        playerB.myCards = listOf(Card(CLUBS, CARD_2), Card(HEARTS, ACE))
+        val winnerList = game.getWinner(playerList, tableCards)
+        assertThat(winnerList.size).isEqualTo(1)
+        assertThat(playerA).isEqualTo(winnerList.get(0))
+        assertThat(playerA.rankingEnum).isEqualTo(ONE_PAIR)
+        assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
+    }
 }
