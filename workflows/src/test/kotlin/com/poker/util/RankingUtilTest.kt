@@ -1,4 +1,4 @@
-package com.poker
+package com.poker.util
 
 
 import com.poker.model.Card
@@ -6,7 +6,6 @@ import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
 import com.poker.model.Player
 import com.poker.model.RankingEnum.*
-import com.poker.util.RankingUtil
 import junit.framework.TestCase
 import net.corda.core.identity.Party
 import org.junit.Assert.assertEquals
@@ -15,6 +14,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import java.util.*
 
+//TODO Replace TestCase with AssertK
 class RankingUtilTest {
     /*
 	 * 	01) ROYAL_FLUSH,

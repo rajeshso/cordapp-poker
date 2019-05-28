@@ -1,7 +1,5 @@
-package com.poker
+package com.poker.flows
 
-import com.poker.flows.AcceptStartGame
-import com.poker.flows.StartGameFlow
 import com.poker.model.RoundEnum
 import com.poker.states.GameState
 import net.corda.core.node.services.queryBy
@@ -16,9 +14,9 @@ import org.junit.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FlowTests {
+class StartGameFlowTests {
     companion object {
-        val log = loggerFor<FlowTests>()
+        val log = loggerFor<StartGameFlowTests>()
     }
     private val network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
             TestCordapp.findCordapp("com.poker.contracts"),

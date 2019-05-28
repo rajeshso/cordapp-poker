@@ -22,7 +22,7 @@ HIGH_CARD
 */
 object RankingUtil {
 
-    fun getRankingToInt(player: Player): Int? {
+    fun getRankingToInt(player: Player): Int {
         return player.rankingEnum.ordinal
     }
 
