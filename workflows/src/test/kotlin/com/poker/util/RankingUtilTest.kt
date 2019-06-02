@@ -4,7 +4,7 @@ package com.poker.util
 import com.poker.model.Card
 import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
-import com.poker.model.Player
+import com.poker.states.Player
 import com.poker.model.RankingEnum.*
 import junit.framework.TestCase
 import net.corda.core.identity.Party
@@ -34,7 +34,7 @@ class RankingUtilTest {
     @Test
     fun testCheckRoyalFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setRoyalFlush(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(ROYAL_FLUSH, player.rankingEnum)
@@ -47,7 +47,7 @@ class RankingUtilTest {
     @Test
     fun testCheckStraightFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setStraightFlush(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(STRAIGHT_FLUSH, player.rankingEnum)
@@ -60,7 +60,7 @@ class RankingUtilTest {
     @Test
     fun testCheckFourOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFourOfAKind(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(FOUR_OF_A_KIND, player.rankingEnum)
@@ -73,7 +73,7 @@ class RankingUtilTest {
     @Test
     fun testCheckFullHouse() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFullHouse(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(FULL_HOUSE, player.rankingEnum)
@@ -86,7 +86,7 @@ class RankingUtilTest {
     @Test
     fun testCheckFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFlush(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(FLUSH, player.rankingEnum)
@@ -99,7 +99,7 @@ class RankingUtilTest {
     @Test
     fun testCheckStraight() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setStraight(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(STRAIGHT, player.rankingEnum)
@@ -112,7 +112,7 @@ class RankingUtilTest {
     @Test
     fun testCheckThreeOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setThreeOfAKind(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(THREE_OF_A_KIND, player.rankingEnum)
@@ -125,7 +125,7 @@ class RankingUtilTest {
     @Test
     fun testCheckTwoPair() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setTwoPair(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(TWO_PAIR, player.rankingEnum)
@@ -138,7 +138,7 @@ class RankingUtilTest {
     @Test
     fun testCheckOnePair() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setOnePair(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(ONE_PAIR, player.rankingEnum)
@@ -151,7 +151,7 @@ class RankingUtilTest {
     @Test
     fun testCheckHighCard() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setHighCard(player, tableCards)
         RankingUtil.checkRanking(player, tableCards)
         assertEquals(HIGH_CARD, player.rankingEnum)
@@ -164,7 +164,7 @@ class RankingUtilTest {
     @Test
     fun testIsRoyalFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setRoyalFlush(player, tableCards)
 
         val royalFlushList = ArrayList<Card>()
@@ -179,7 +179,7 @@ class RankingUtilTest {
     @Test
     fun testIsRoyalFlushNotSequence() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(CLUBS, JACK), Card(CLUBS, CARD_10))
 
         tableCards.add(Card(CLUBS, QUEEN))
@@ -198,7 +198,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotRoyalFlushNotSameSuit() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(CLUBS, ACE), Card(HEARTS, CARD_10))
 
         tableCards.add(Card(CLUBS, CARD_2))
@@ -211,7 +211,7 @@ class RankingUtilTest {
     @Test
     fun testIsStraightFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setStraightFlush(player, tableCards)
 
         val straightFlushList = ArrayList<Card>()
@@ -226,7 +226,7 @@ class RankingUtilTest {
     @Test
     fun testIsStraightFlushNotSequence() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(CLUBS, CARD_2), Card(CLUBS, CARD_3))
 
         tableCards.add(Card(CLUBS, CARD_4))
@@ -239,7 +239,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotStraightFlushNoSameSuit() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(CLUBS, CARD_2), Card(CLUBS, CARD_3))
 
         tableCards.add(Card(CLUBS, CARD_4))
@@ -252,7 +252,7 @@ class RankingUtilTest {
     @Test
     fun testIsFourOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFourOfAKind(player, tableCards)
 
         val fourOfAKindList = ArrayList<Card>()
@@ -268,7 +268,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotFourOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer =mockParty)
         player.myCards = listOf(Card(DIAMONDS, CARD_10), Card(CLUBS, CARD_10))
 
         tableCards.add(Card(CLUBS, CARD_10))
@@ -281,7 +281,7 @@ class RankingUtilTest {
     @Test
     fun testIsFullHouse() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer =mockParty)
         setFullHouse(player, tableCards)
 
         val fullHouseList = ArrayList<Card>()
@@ -305,7 +305,7 @@ class RankingUtilTest {
         val cardTwo2 = Card(HEARTS, JACK)
 
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer =mockParty)
         player.myCards = listOf(cardThree3, cardTwo2)
 
         tableCards.add(cardTwo1)
@@ -319,7 +319,7 @@ class RankingUtilTest {
     @Test
     fun testIsFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer =mockParty)
         setFlush(player, tableCards)
 
         val flushList = ArrayList<Card>()
@@ -334,7 +334,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotFlush() {
         val tableCards = ArrayList<Card>()
-        val player: Player = Player(mockParty)
+        val player: Player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(CLUBS, CARD_10), Card(CLUBS, CARD_10))
         tableCards.add(Card(HEARTS, CARD_2))
         tableCards.add(Card(CLUBS, KING))
@@ -346,7 +346,7 @@ class RankingUtilTest {
     @Test
     fun testIsStraight() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setStraight(player, tableCards)
 
         val straightList = ArrayList<Card>()
@@ -361,7 +361,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotStraight() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(DIAMONDS, CARD_2), Card(CLUBS, CARD_3))
 
         tableCards.add(Card(CLUBS, CARD_8))
@@ -374,7 +374,7 @@ class RankingUtilTest {
     @Test
     fun testIsThreeOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setThreeOfAKind(player, tableCards)
 
         val listThreeOfAKind = ArrayList<Card>()
@@ -390,7 +390,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotThreeOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(DIAMONDS, CARD_10), Card(CLUBS, CARD_10))
 
         tableCards.add(Card(CLUBS, CARD_2))
@@ -403,7 +403,7 @@ class RankingUtilTest {
     @Test
     fun testIsTwoPair() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setTwoPair(player, tableCards)
 
         val fullHouseList = ArrayList<Card>()
@@ -426,7 +426,7 @@ class RankingUtilTest {
         val cardTwo2 = Card(HEARTS, JACK)
 
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(cardThree3, cardTwo2)
 
         tableCards.add(cardTwo1)
@@ -440,7 +440,7 @@ class RankingUtilTest {
     @Test
     fun testIsOnePair() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setOnePair(player, tableCards)
 
         val listOnePair = ArrayList<Card>()
@@ -454,7 +454,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotOnePair() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(DIAMONDS, CARD_2), Card(CLUBS, CARD_10))
 
         tableCards.add(Card(CLUBS, CARD_3))
@@ -467,7 +467,7 @@ class RankingUtilTest {
     @Test
     fun testGetHighCardRepeatedCards() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         val fourCard = Card(CLUBS, CARD_4)
         player.myCards = listOf(fourCard, fourCard)
 
@@ -481,7 +481,7 @@ class RankingUtilTest {
     @Test
     fun testGetHighCardAce() {
         val tableCards = ArrayList<Card>()
-        val player = Player(mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(HEARTS, CARD_9), Card(SPADES, CARD_7))
 
         val aceCard = Card(CLUBS, ACE)

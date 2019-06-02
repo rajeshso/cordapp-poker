@@ -6,23 +6,24 @@ import assertk.assertions.isEqualTo
 import com.poker.model.Card
 import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
-import com.poker.model.Player
+import com.poker.states.Player
 import com.poker.model.RankingEnum.*
 import com.poker.states.Deck
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
-import org.mockito.Mockito
+import org.mockito.Mockito.mock
 
 class GameUtilTest {
-    val mockParty = Mockito.mock(Party::class.java)
+    val mockParty = mock(Party::class.java)
 
-    var deck = Deck(mockParty)
+    var mockUniqueIdentifier = mock(UniqueIdentifier::class.java)
 
     @Test
     fun testDrawGameTwoPlayers() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -47,8 +48,8 @@ class GameUtilTest {
     fun testPlayerAWinDrawGameBestRanking() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -70,11 +71,11 @@ class GameUtilTest {
         assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
     }
     @Test
-    fun testPlayerBWinDrawGameHighCard() {
+    fun testPlayerBWinDrawGameHighCard()  {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -101,8 +102,8 @@ class GameUtilTest {
     fun testPlayerAWinStraighFlush() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -133,8 +134,8 @@ class GameUtilTest {
     fun testPlayerBWinFourOfAKind() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -166,8 +167,8 @@ class GameUtilTest {
     fun testPlayerAWinFullHouse() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -199,8 +200,8 @@ class GameUtilTest {
     fun testPlayerBWinFlush() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -231,8 +232,8 @@ class GameUtilTest {
     fun testPlayerAWinStraight() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()
@@ -263,8 +264,8 @@ class GameUtilTest {
     fun testPlayerAWinThreeOfAKind() {
         //Basic tests
         val game = GameUtil
-        val playerA = Player(mockParty)
-        val playerB = Player(mockParty)
+        val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
+        val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
         val dealer =mockParty
         val tableCards = mutableListOf<Card>()

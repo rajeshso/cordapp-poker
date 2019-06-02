@@ -1,7 +1,7 @@
 package com.poker.util
 
 import com.poker.model.Card
-import com.poker.model.Player
+import com.poker.states.Player
 import com.poker.states.Deck
 import java.util.*
 

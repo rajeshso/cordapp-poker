@@ -4,9 +4,7 @@ import com.poker.contracts.DeckContract
 import com.poker.model.Card
 import com.poker.model.CardRankEnum
 import com.poker.model.CardSuitEnum
-import net.corda.core.contracts.BelongsToContract
-import net.corda.core.contracts.CommandAndState
-import net.corda.core.contracts.OwnableState
+import net.corda.core.contracts.*
 import net.corda.core.identity.AbstractParty
 import net.corda.core.serialization.CordaSerializable
 import java.util.*
@@ -16,7 +14,8 @@ import kotlin.collections.HashSet
 
 @BelongsToContract(DeckContract::class)
 @CordaSerializable
-data class Deck(override val owner: AbstractParty) : OwnableState {
+data class Deck(val owner: AbstractParty) : ContractState {
+    val linearId: UniqueIdentifier = UniqueIdentifier()
 
     override val participants: List<AbstractParty> = listOf(owner)
 
@@ -47,7 +46,5 @@ data class Deck(override val owner: AbstractParty) : OwnableState {
             Collections.shuffle(cards, Random())
         }
     }
-    override fun withNewOwner(newOwner: AbstractParty): CommandAndState {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 }
