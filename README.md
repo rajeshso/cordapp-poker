@@ -173,3 +173,6 @@ run vaultQuery contractStateType: com.poker.states.Deck
 run vaultQuery contractStateType: com.poker.states.Player
 
 gameID can be found by running the vault query commands. The linerid is the game id
+
+### Credits
+https://github.com/phstc/javapokertexasholdem
