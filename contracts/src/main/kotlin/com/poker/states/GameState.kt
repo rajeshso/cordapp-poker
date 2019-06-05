@@ -17,6 +17,7 @@ data class GameState(
         override val linearId: UniqueIdentifier,
         val dealer: Party,
         val players: List<Party>,
+        val deckIdentifier: UniqueIdentifier,
         var tableCards: List<Card>,
         var rounds: RoundEnum,
         val lastChange: LocalDateTime = LocalDateTime.now()

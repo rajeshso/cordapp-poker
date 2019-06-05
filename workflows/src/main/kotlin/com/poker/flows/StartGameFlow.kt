@@ -40,14 +40,14 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
 
     companion object {
         object INITIALISING : Step("Performing initial steps - create game state.")
-        object BUILDING : Step("Building and verifying transaction - Start Game tx with gamestate as output and no input")
         object DECKING : Step("Build Deck and store in the Dealer's vault")
+        object BUILDING : Step("Building and verifying transaction - Start Game tx with gamestate as output and no input")
         object SIGNING : Step("Dealer Signing transaction.")
         object FINALISING : Step("Finalising transaction. - Full Final signature on the vault") {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
 
-        fun tracker() = ProgressTracker(INITIALISING, BUILDING, DECKING, SIGNING, FINALISING)
+        fun tracker() = ProgressTracker(INITIALISING,  DECKING, BUILDING,SIGNING, FINALISING)
     }
 
     @Suspendable
@@ -55,21 +55,11 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
         // Step 1. Initialisation.
         progressTracker.currentStep = INITIALISING
         val dealer = serviceHub.myInfo.legalIdentities.first()
-        val gameState: GameState = GameState(UniqueIdentifier(), dealer, emptyList(), emptyList(), RoundEnum.Started)
 
-        // Step 2. Building.
-        progressTracker.currentStep = BUILDING
-        val txCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
-        val txBuilder = TransactionBuilder(notary)
-                .addOutputState(gameState)
-                .addCommand(txCommand)
-                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
-        txBuilder.verify(serviceHub)
-
-        // Step 3. Decking.
+        // Step 2. Decking.
         progressTracker.currentStep = DECKING
         val deck: Deck = Deck(dealer)
-        val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
+        val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), dealer.owningKey)
         val txInternalBuilder = TransactionBuilder(notary)
                 .addOutputState(deck)
                 .addCommand(txInternalCommand)
@@ -77,6 +67,17 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
         txInternalBuilder.verify(serviceHub)
         val dealerSignedTxForDecking = serviceHub.signInitialTransaction(txInternalBuilder)
         serviceHub.recordTransactions(dealerSignedTxForDecking)
+
+        // Step 3. Building.
+        progressTracker.currentStep = BUILDING
+        val gameState: GameState = GameState(UniqueIdentifier(), dealer, emptyList(), deck.linearId, emptyList(), RoundEnum.Started)
+        val txCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
+        val txBuilder = TransactionBuilder(notary)
+                .addOutputState(gameState)
+                .addCommand(txCommand)
+                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+        txBuilder.verify(serviceHub)
+
 
         // Step 4. Sign the transaction.
         progressTracker.currentStep = SIGNING

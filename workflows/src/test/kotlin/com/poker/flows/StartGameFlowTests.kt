@@ -54,5 +54,6 @@ class StartGameFlowTests {
         val gameState = stateAndRef.state.data
         assertTrue(gameState.rounds == RoundEnum.Started)
         assertTrue(gameState.tableCards.isEmpty())
+        assertNotNull(gameState.deckIdentifier.id)
     }
 }
