@@ -159,20 +159,10 @@ While the sole poker endpoint is served on:
 For a guided example of how to extend this poker, see the Hello, World! tutorial 
 [here](https://docs.corda.net/hello-world-introduction.html).
 
-### Completed Development Tasks
-Domain Model
-Basic States
-WIP - Contracts
-
-### TODO Tasks
-Contracts
-Publish Game State
-Game Flows for Deal
-Game Flows for Flop
-Game Flows for River
-Game Flows for Turn
-Game Flows for Winner
-Game Flows for Start
-Game Flows for End
-
-Betting.....
+### Useful commands in the shell
+flow start com.poker.flows.StartGameFlow notary: "O=Notary, L=London, C=GB"
+flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, player: "O=PlayerA,L=London,C=GB"
+flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, player: "O=PlayerB,L=New York,C=US"
+run vaultQuery contractStateType: com.poker.states.GameState
+run vaultQuery contractStateType: com.poker.states.Deck
+run vaultQuery contractStateType: com.poker.states.Player
