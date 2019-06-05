@@ -41,10 +41,9 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         object VALIDATING : ProgressTracker.Step("Performing initial steps - get game state, player and check if they are valid")
         object BUILDING : ProgressTracker.Step("Building and verifying transaction")
         object SIGNING : ProgressTracker.Step("Dealer Signing transaction.")
-        object COLLECTING : ProgressTracker.Step("Collecting signatures from the player.") {
+        object COLLECTING : ProgressTracker.Step("Collecting signatures from the dealer and other players.") {
             override fun childProgressTracker() = CollectSignaturesFlow.tracker()
         }
-
         object FINALISING : ProgressTracker.Step("Finalising transaction. - Full Final signature on the vault") {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
@@ -58,7 +57,6 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         progressTracker.currentStep = VALIDATING
         val qr = this.serviceHub.vaultService.queryBy(GameState::class.java)
         val gameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(UniqueIdentifier(id = UUID.fromString(gameID))))).states.first()
-        // val gameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java).states.filter{it.state.data.linearId == UniqueIdentifier(gameID)}.first()
         val gameState = gameStateRef.state.data
         val playerState: Player = Player(party = player, dealer = gameState.dealer)
         val notary = this.serviceHub.networkMapCache.notaryIdentities.first()
@@ -99,7 +97,7 @@ class Acceptor(val otherPartySession: FlowSession) : FlowLogic<SignedTransaction
     override fun call(): SignedTransaction {
         val signTransactionFlow = object : SignTransactionFlow(otherPartySession) {
             override fun checkTransaction(stx: SignedTransaction) = requireThat {
-
+                //TODO
             }
         }
         val txId = subFlow(signTransactionFlow).id
