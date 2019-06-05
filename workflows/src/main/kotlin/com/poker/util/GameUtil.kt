@@ -1,8 +1,8 @@
 package com.poker.util
 
 import com.poker.model.Card
-import com.poker.states.Player
 import com.poker.states.Deck
+import com.poker.states.Player
 import java.util.*
 
 object GameUtil {
@@ -146,7 +146,6 @@ object GameUtil {
         }
         return null
     }
-
 
 
 }

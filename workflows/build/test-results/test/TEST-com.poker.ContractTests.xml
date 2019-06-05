@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.poker.ContractTests" tests="1" skipped="0" failures="0" errors="0"
+  timestamp="2019-06-05T17:24:37" hostname="ip-10-100-254-13.eu-west-1.compute.internal" time="0.0">
+  <properties/>
+  <testcase name="dummy test" classname="com.poker.ContractTests" time="0.0"/>
+  <system-out><![CDATA[?[37m[INFO] 18:24:34,983 [Test worker] cordapp.JarScanningCordappLoader.<init> - Loading CorDapps from RestrictedURL(url=file:/Users/rajeshsomasundaram/Workspace/IdeaProjects/cordapp-poker/workflows/build/generated-custom-cordapps/20190605-172433.621/custom-cordapp_1_4_267a20ab-2273-43dc-ad50-26a1baef1715.jar, rootPackageName=null)
+?[m?[37m[INFO] 18:24:35,093 [Test worker] cordapp.JarScanningCordappLoader.scanCordapp - Scanning CorDapp in file:/Users/rajeshsomasundaram/Workspace/IdeaProjects/cordapp-poker/workflows/build/generated-custom-cordapps/20190605-172433.621/custom-cordapp_1_4_267a20ab-2273-43dc-ad50-26a1baef1715.jar
+?[m?[37m[INFO] 18:24:35,982 [Test worker] cordapp.JarScanningCordappLoader.findNotaryService - Found notary service CorDapp implementations: 
+?[m?[37m[INFO] 18:24:36,017 [Test worker] ClassloaderUtils.logElapsedTime - Contracts loading for '/var/folders/pt/7tlftfld30b_4pm0b5_bw1040000gp/T/attachment1020875432810895653.jar' took 24 msec
+?[m]]></system-out>
+  <system-err><![CDATA[QUASAR WARNING: Assertions enabled. This may harm performance.
+QUASAR WARNING: Fibers are set to verify instrumentation. This may *severely* harm performance.
+]]></system-err>
+</testsuite>

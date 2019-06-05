@@ -1,9 +1,9 @@
 package com.poker.model
 
-import org.junit.Test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
+import org.junit.Test
 
 class CardTest {
     @Test

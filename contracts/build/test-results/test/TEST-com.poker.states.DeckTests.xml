@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.poker.states.DeckTests" tests="5" skipped="0" failures="0" errors="0"
+  timestamp="2019-06-05T17:24:25" hostname="ip-10-100-254-13.eu-west-1.compute.internal"
+  time="0.009">
+  <properties/>
+  <testcase name="deck pops 52 cards" classname="com.poker.states.DeckTests" time="0.0"/>
+  <testcase name="deck contains cards" classname="com.poker.states.DeckTests" time="0.004"/>
+  <testcase name="deck throws Exception after 52'nd pop" classname="com.poker.states.DeckTests"
+    time="0.001"/>
+  <testcase name="deck pops different cards" classname="com.poker.states.DeckTests" time="0.0"/>
+  <testcase name="deck has the same signature after any number of pops"
+    classname="com.poker.states.DeckTests" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

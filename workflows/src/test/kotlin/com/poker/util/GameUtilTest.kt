@@ -1,16 +1,16 @@
 package com.poker.util
 
-import org.junit.Test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.poker.model.Card
 import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
-import com.poker.states.Player
 import com.poker.model.RankingEnum.*
 import com.poker.states.Deck
+import com.poker.states.Player
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
+import org.junit.Test
 import org.mockito.Mockito.mock
 
 class GameUtilTest {
@@ -25,7 +25,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -51,7 +51,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -70,14 +70,15 @@ class GameUtilTest {
         assertThat(playerA.rankingEnum).isEqualTo(ONE_PAIR)
         assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
     }
+
     @Test
-    fun testPlayerBWinDrawGameHighCard()  {
+    fun testPlayerBWinDrawGameHighCard() {
         //Basic tests
         val game = GameUtil
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -105,7 +106,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -137,7 +138,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -170,7 +171,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -203,7 +204,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -235,7 +236,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 
@@ -267,7 +268,7 @@ class GameUtilTest {
         val playerA = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerB = Player(mockUniqueIdentifier, mockParty, mockParty)
         val playerList = mutableListOf<Player>(playerA, playerB)
-        val dealer =mockParty
+        val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
 

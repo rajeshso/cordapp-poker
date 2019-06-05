@@ -23,5 +23,6 @@ class PokerContract : Contract {
     // Used to indicate the transaction's intent.
     interface Commands : CommandData {
         class Start_GAME : Commands
+        class ADD_PLAYER : Commands
     }
 }

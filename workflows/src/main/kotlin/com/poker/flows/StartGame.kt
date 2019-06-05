@@ -7,10 +7,11 @@ import com.poker.states.Deck
 import com.poker.states.GameState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
-import net.corda.core.contracts.requireThat
-import net.corda.core.flows.*
+import net.corda.core.flows.FinalityFlow
+import net.corda.core.flows.FlowLogic
+import net.corda.core.flows.InitiatingFlow
+import net.corda.core.flows.StartableByRPC
 import net.corda.core.identity.Party
-import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 import net.corda.core.utilities.ProgressTracker.Step
@@ -18,10 +19,11 @@ import net.corda.core.utilities.minutes
 
 // *********
 // * Flows *
+// reference: https://github.com/corda/corda/blob/master/finance/workflows/src/main/kotlin/net/corda/finance/flows/CashIssueFlow.kt
 // *********
 @InitiatingFlow
 @StartableByRPC
-class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<UniqueIdentifier>() {
+class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
     /**
      * Tracks progress throughout the flows call execution.
      */
@@ -32,7 +34,6 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
                     BUILDING,
                     DECKING,
                     SIGNING,
-                    COLLECTING,
                     FINALISING
             )
         }
@@ -42,15 +43,11 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
         object BUILDING : Step("Building and verifying transaction - Start Game tx with gamestate as output and no input")
         object DECKING : Step("Build Deck and store in the Dealer's vault")
         object SIGNING : Step("Dealer Signing transaction.")
-        object COLLECTING : Step("Collecting signatures from the players.") {
-            override fun childProgressTracker() = CollectSignaturesFlow.tracker()
-        }
-
         object FINALISING : Step("Finalising transaction. - Full Final signature on the vault") {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
 
-        fun tracker() = ProgressTracker(INITIALISING, BUILDING, DECKING, SIGNING, COLLECTING, FINALISING)
+        fun tracker() = ProgressTracker(INITIALISING, BUILDING, DECKING, SIGNING, FINALISING)
     }
 
     @Suspendable
@@ -58,7 +55,7 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
         // Step 1. Initialisation.
         progressTracker.currentStep = INITIALISING
         val dealer = serviceHub.myInfo.legalIdentities.first()
-        val gameState: GameState = GameState(UniqueIdentifier(), dealer, players, emptyList(), RoundEnum.Started)
+        val gameState: GameState = GameState(UniqueIdentifier(), dealer, emptyList(), emptyList(), RoundEnum.Started)
 
         // Step 2. Building.
         progressTracker.currentStep = BUILDING
@@ -85,32 +82,11 @@ class StartGameFlow(val players: List<Party>, val notary: Party) : FlowLogic<Uni
         progressTracker.currentStep = SIGNING
         val dealerSignedTx = serviceHub.signInitialTransaction(txBuilder)
 
-        // Step 5. Get the counter-party (Players) signature.
-        progressTracker.currentStep = COLLECTING
-        val otherPartySessions = players.map { initiateFlow(it) }
-        val fullySignedTx = subFlow(CollectSignaturesFlow(dealerSignedTx, otherPartySessions.toSet()))
-
-        // Step 6. Finalise the transaction.
+        // Step 5. Finalise the transaction.
         progressTracker.currentStep = FINALISING
-        val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
+        val finalityFlow = subFlow(FinalityFlow(dealerSignedTx, emptyList()))
         return gameState.linearId
     }
 }
 
-@InitiatedBy(StartGameFlow::class)
-class AcceptStartGame(val counterpartySession: FlowSession) : FlowLogic<SignedTransaction>() {
-    @Suspendable
-    override fun call(): SignedTransaction {
-        val signTransactionFlow = object : SignTransactionFlow(counterpartySession) {
-            override fun checkTransaction(stx: SignedTransaction) = requireThat {
-                val output = stx.tx.outputs.single().data
-                "This must be an Game Start transaction." using (output is GameState)
-                val gameState = output as GameState
-                // "I won't accept IOUs with a value over 100." using (gameState.value <= 100)
-            }
-        }
-        val txId = subFlow(signTransactionFlow).id
 
-        return subFlow(ReceiveFinalityFlow(counterpartySession, expectedTxId = txId))
-    }
-}

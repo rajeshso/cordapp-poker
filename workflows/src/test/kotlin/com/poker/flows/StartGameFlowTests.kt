@@ -18,20 +18,20 @@ class StartGameFlowTests {
     companion object {
         val log = loggerFor<StartGameFlowTests>()
     }
+
     private val network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
             TestCordapp.findCordapp("com.poker.contracts"),
             TestCordapp.findCordapp("com.poker.flows")
     )))
     private val notary = network.createNode()
     private val dealer = network.createNode()
-    private val playerA = network.createNode()
-    private val playerB = network.createNode()
 
-    init {
+
+/*    init {
         listOf(playerA, playerB).forEach {
             it.registerInitiatedFlow(AcceptStartGame::class.java)
         }
-    }
+    }*/
 
     @Before
     fun setup() = network.runNetwork()
@@ -42,20 +42,16 @@ class StartGameFlowTests {
     @Test
     fun `Starting the game should return a UID and all its state values are initialized`() {
         val notaryNode = network.defaultNotaryNode.info.legalIdentities.first()
-        val flow = dealer.startFlow(StartGameFlow(listOf(
-                playerA.info.legalIdentities.first(),
-                playerB.info.legalIdentities.first()
-        ), notaryNode)).toCompletableFuture()
+        val flow = dealer.startFlow(StartGameFlow(notaryNode)).toCompletableFuture()
         network.runNetwork()
         val uid = flow.getOrThrow()
         log.info("game id: $uid")
         assertNotNull(uid.id)
         val vault = dealer.services.vaultService.queryBy<GameState>()
-        assertTrue(vault.states.size==1)
+        assertTrue(vault.states.size == 1)
         val stateAndRef = vault.states.first()
         assertTrue(stateAndRef.state.notary == notaryNode)
         val gameState = stateAndRef.state.data
-        assertTrue(gameState.players == listOf(playerA.info.legalIdentities.first(), playerB.info.legalIdentities.first()))
         assertTrue(gameState.rounds == RoundEnum.Started)
         assertTrue(gameState.tableCards.isEmpty())
     }

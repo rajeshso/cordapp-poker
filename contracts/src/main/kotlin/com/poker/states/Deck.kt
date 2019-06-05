@@ -4,7 +4,9 @@ import com.poker.contracts.DeckContract
 import com.poker.model.Card
 import com.poker.model.CardRankEnum
 import com.poker.model.CardSuitEnum
-import net.corda.core.contracts.*
+import net.corda.core.contracts.BelongsToContract
+import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
 import net.corda.core.serialization.CordaSerializable
 import java.util.*
@@ -20,7 +22,7 @@ data class Deck(val owner: AbstractParty) : ContractState {
     override val participants: List<AbstractParty> = listOf(owner)
 
     var index = 0
-    val signature get() =  cards.joinToString(",")
+    val signature get() = cards.joinToString(",")
 
     fun pop(): Card {
         return if (index < cards.size) {

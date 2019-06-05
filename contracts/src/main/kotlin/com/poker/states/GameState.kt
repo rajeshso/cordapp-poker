@@ -7,9 +7,7 @@ import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
-import net.corda.core.schemas.MappedSchema
-import net.corda.core.schemas.PersistentState
-import net.corda.core.schemas.QueryableState
+import net.corda.core.identity.Party
 import net.corda.core.serialization.CordaSerializable
 import java.time.LocalDateTime
 
@@ -17,8 +15,8 @@ import java.time.LocalDateTime
 @CordaSerializable
 data class GameState(
         override val linearId: UniqueIdentifier,
-        val dealer: AbstractParty,
-        val players: List<AbstractParty>,
+        val dealer: Party,
+        val players: List<Party>,
         var tableCards: List<Card>,
         var rounds: RoundEnum,
         val lastChange: LocalDateTime = LocalDateTime.now()
@@ -28,6 +26,11 @@ data class GameState(
 
     fun addTableCards(newTableCards: MutableList<Card>) = copy(
             tableCards = tableCards + newTableCards,
+            lastChange = LocalDateTime.now()
+    )
+
+    fun addPlayer(player: Party) = copy(
+            players = players + player,
             lastChange = LocalDateTime.now()
     )
 }

@@ -4,8 +4,8 @@ package com.poker.util
 import com.poker.model.Card
 import com.poker.model.CardRankEnum.*
 import com.poker.model.CardSuitEnum.*
-import com.poker.states.Player
 import com.poker.model.RankingEnum.*
+import com.poker.states.Player
 import junit.framework.TestCase
 import net.corda.core.identity.Party
 import org.junit.Assert.assertEquals
@@ -268,7 +268,7 @@ class RankingUtilTest {
     @Test
     fun testIsNotFourOfAKind() {
         val tableCards = ArrayList<Card>()
-        val player = Player(party = mockParty, dealer =mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(Card(DIAMONDS, CARD_10), Card(CLUBS, CARD_10))
 
         tableCards.add(Card(CLUBS, CARD_10))
@@ -281,7 +281,7 @@ class RankingUtilTest {
     @Test
     fun testIsFullHouse() {
         val tableCards = ArrayList<Card>()
-        val player = Player(party = mockParty, dealer =mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFullHouse(player, tableCards)
 
         val fullHouseList = ArrayList<Card>()
@@ -305,7 +305,7 @@ class RankingUtilTest {
         val cardTwo2 = Card(HEARTS, JACK)
 
         val tableCards = ArrayList<Card>()
-        val player = Player(party = mockParty, dealer =mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         player.myCards = listOf(cardThree3, cardTwo2)
 
         tableCards.add(cardTwo1)
@@ -319,7 +319,7 @@ class RankingUtilTest {
     @Test
     fun testIsFlush() {
         val tableCards = ArrayList<Card>()
-        val player = Player(party = mockParty, dealer =mockParty)
+        val player = Player(party = mockParty, dealer = mockParty)
         setFlush(player, tableCards)
 
         val flushList = ArrayList<Card>()

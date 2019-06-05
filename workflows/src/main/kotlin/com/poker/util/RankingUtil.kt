@@ -3,9 +3,9 @@ package com.poker.util
 import com.poker.model.Card
 import com.poker.model.CardRankEnum
 import com.poker.model.CardRankEnum.*
-import com.poker.states.Player
 import com.poker.model.RankingEnum
 import com.poker.model.RankingEnum.*
+import com.poker.states.Player
 import java.util.*
 
 /*
