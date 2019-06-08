@@ -69,7 +69,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
 
         // Step 3. Building.
         progressTracker.currentStep = BUILDING
-        val gameState: GameState = GameState(UniqueIdentifier(), dealer, emptyList(), deck.linearId, emptyList(), RoundEnum.Started)
+        val gameState: GameState = GameState(UniqueIdentifier(), dealer, emptyList(), deck.linearId, emptyList(), RoundEnum.Started, 0)
         val txCommand = Command(PokerContract.Commands.Start_GAME(), gameState.participants.map { it.owningKey })
         val txBuilder = TransactionBuilder(notary)
                 .addOutputState(gameState)

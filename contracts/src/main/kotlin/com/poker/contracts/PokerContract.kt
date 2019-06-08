@@ -29,5 +29,6 @@ class PokerContract : Contract {
         class RIVERED : Commands
         class TURNED : Commands
         class WINNER : Commands
+        class BET : Commands
     }
 }

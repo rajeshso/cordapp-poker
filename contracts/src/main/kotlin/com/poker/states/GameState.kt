@@ -3,6 +3,7 @@ package com.poker.states
 import com.poker.contracts.PokerContract
 import com.poker.model.Card
 import com.poker.model.RoundEnum
+import net.corda.core.contracts.Amount
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
@@ -20,13 +21,14 @@ data class GameState(
         val deckIdentifier: UniqueIdentifier,
         var tableCards: List<Card>,
         var rounds: RoundEnum,
+        var betAmount: Int,
         val lastChange: LocalDateTime = LocalDateTime.now()
 ) : LinearState {
 
     override val participants: List<AbstractParty> get() = listOf(dealer) + players
 
-    fun addTableCards(newTableCards: MutableList<Card>) = copy(
-            tableCards = tableCards + newTableCards,
+    fun addBetAmount(amount: Int) = copy(
+            betAmount = betAmount + amount,
             lastChange = LocalDateTime.now()
     )
 
