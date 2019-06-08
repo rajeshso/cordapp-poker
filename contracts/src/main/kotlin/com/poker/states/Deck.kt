@@ -6,6 +6,7 @@ import com.poker.model.CardRankEnum
 import com.poker.model.CardSuitEnum
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.ContractState
+import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.AbstractParty
 import net.corda.core.serialization.CordaSerializable
@@ -16,8 +17,8 @@ import kotlin.collections.HashSet
 
 @BelongsToContract(DeckContract::class)
 @CordaSerializable
-data class Deck(val owner: AbstractParty) : ContractState {
-    val linearId: UniqueIdentifier = UniqueIdentifier()
+data class Deck(val owner: AbstractParty, override val linearId: UniqueIdentifier = UniqueIdentifier()) : LinearState {
+
 
     override val participants: List<AbstractParty> = listOf(owner)
 

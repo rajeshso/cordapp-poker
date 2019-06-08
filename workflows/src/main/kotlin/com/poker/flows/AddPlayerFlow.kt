@@ -71,7 +71,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
                 .addOutputState(newGameState)
                 .addOutputState(playerState)
                 .addCommand(txCommand)
-                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+              //  .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
         // Step 3. Sign the transaction.

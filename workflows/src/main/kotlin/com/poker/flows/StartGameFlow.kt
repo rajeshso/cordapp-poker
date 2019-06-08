@@ -58,12 +58,11 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
 
         // Step 2. Decking.
         progressTracker.currentStep = DECKING
-        val deck: Deck = Deck(dealer)
+        val deck: Deck = Deck( dealer )
         val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), dealer.owningKey)
         val txInternalBuilder = TransactionBuilder(notary)
                 .addOutputState(deck)
                 .addCommand(txInternalCommand)
-                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txInternalBuilder.verify(serviceHub)
         val dealerSignedTxForDecking = serviceHub.signInitialTransaction(txInternalBuilder)
         serviceHub.recordTransactions(dealerSignedTxForDecking)
@@ -75,7 +74,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
         val txBuilder = TransactionBuilder(notary)
                 .addOutputState(gameState)
                 .addCommand(txCommand)
-                .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+               // .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
 

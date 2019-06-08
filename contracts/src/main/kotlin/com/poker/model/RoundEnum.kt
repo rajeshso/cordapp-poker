@@ -9,6 +9,5 @@ enum class RoundEnum {
     Flopped,
     Rivered,
     Turned,
-    Winner,
-    End
+    Winner
 }

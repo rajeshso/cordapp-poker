@@ -21,5 +21,4 @@ data class Player(
     var rankingEnum: RankingEnum = RankingEnum.HIGH_CARD
     var highCard: Card? = null
     var highCardRankingList: List<Card> = emptyList<Card>()
-
 }

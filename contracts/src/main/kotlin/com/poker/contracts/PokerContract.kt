@@ -24,5 +24,10 @@ class PokerContract : Contract {
     interface Commands : CommandData {
         class Start_GAME : Commands
         class ADD_PLAYER : Commands
+        class DEALT : Commands
+        class FLOPPED : Commands
+        class RIVERED : Commands
+        class TURNED : Commands
+        class WINNER : Commands
     }
 }

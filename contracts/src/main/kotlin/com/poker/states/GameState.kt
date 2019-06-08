@@ -34,6 +34,5 @@ data class GameState(
             players = players + player,
             lastChange = LocalDateTime.now()
     )
+    //TODO: Deck Signature to be included in GameState . There should be a way for players to ensure that the deck is not tampered
 }
-
-

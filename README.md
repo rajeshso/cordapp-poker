@@ -166,6 +166,16 @@ flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892
 
 flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, player: "O=PlayerB,L=New York,C=US"
 
+flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Dealt
+
+flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Flopped
+
+flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Rivered
+
+flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Turned
+
+flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Winner
+
 run vaultQuery contractStateType: com.poker.states.GameState
 
 run vaultQuery contractStateType: com.poker.states.Deck
