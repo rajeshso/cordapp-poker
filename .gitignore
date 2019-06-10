@@ -16,7 +16,10 @@ tags
 # General build files
 **/build/*
 !docs/build/*
-
+workflows/build/
+contracts/build/
+clients/build/
+build/
 lib/dokka.jar
 
 ### JetBrains template
