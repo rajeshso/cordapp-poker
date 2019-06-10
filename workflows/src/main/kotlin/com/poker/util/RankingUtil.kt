@@ -5,7 +5,7 @@ import com.poker.model.CardRankEnum
 import com.poker.model.CardRankEnum.*
 import com.poker.model.RankingEnum
 import com.poker.model.RankingEnum.*
-import com.poker.states.Player
+import com.poker.states.PlayerState
 import java.util.*
 
 /*
@@ -22,87 +22,87 @@ HIGH_CARD
 */
 object RankingUtil {
 
-    fun getRankingToInt(player: Player): Int {
-        return player.rankingEnum.ordinal
+    fun getRankingToInt(playerState: PlayerState): Int {
+        return playerState.rankingEnum.ordinal
     }
 
-    fun checkRanking(player: Player, tableCards: List<Card>) {
+    fun checkRanking(playerState: PlayerState, tableCards: List<Card>) {
 
         //HIGH_CARD
-        val highCard = getHighCard(player, tableCards)
-        player.highCard = highCard
+        val highCard = getHighCard(playerState, tableCards)
+        playerState.highCard = highCard
 
         //ROYAL_FLUSH
-        var rankingList = getRoyalFlush(player, tableCards)
+        var rankingList = getRoyalFlush(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, ROYAL_FLUSH, rankingList)
+            setRankingEnumAndList(playerState, ROYAL_FLUSH, rankingList)
             return
         }
         //STRAIGHT_FLUSH
-        rankingList = getStraightFlush(player, tableCards)
+        rankingList = getStraightFlush(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, STRAIGHT_FLUSH,
+            setRankingEnumAndList(playerState, STRAIGHT_FLUSH,
                     rankingList)
             return
         }
         //FOUR_OF_A_KIND
-        rankingList = getFourOfAKind(player, tableCards)
+        rankingList = getFourOfAKind(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, FOUR_OF_A_KIND,
+            setRankingEnumAndList(playerState, FOUR_OF_A_KIND,
                     rankingList)
             return
         }
         //FULL_HOUSE
-        rankingList = getFullHouse(player, tableCards)
+        rankingList = getFullHouse(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, FULL_HOUSE, rankingList)
+            setRankingEnumAndList(playerState, FULL_HOUSE, rankingList)
             return
         }
         //FLUSH
-        rankingList = getFlush(player, tableCards)
+        rankingList = getFlush(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, FLUSH, rankingList)
+            setRankingEnumAndList(playerState, FLUSH, rankingList)
             return
         }
         //STRAIGHT
-        rankingList = getStraight(player, tableCards)
+        rankingList = getStraight(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, STRAIGHT, rankingList)
+            setRankingEnumAndList(playerState, STRAIGHT, rankingList)
             return
         }
         //THREE_OF_A_KIND
-        rankingList = getThreeOfAKind(player, tableCards)
+        rankingList = getThreeOfAKind(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, THREE_OF_A_KIND,
+            setRankingEnumAndList(playerState, THREE_OF_A_KIND,
                     rankingList)
             return
         }
         //TWO_PAIR
-        rankingList = getTwoPair(player, tableCards)
+        rankingList = getTwoPair(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, TWO_PAIR, rankingList)
+            setRankingEnumAndList(playerState, TWO_PAIR, rankingList)
             return
         }
         //ONE_PAIR
-        rankingList = getOnePair(player, tableCards)
+        rankingList = getOnePair(playerState, tableCards)
         if (rankingList != null) {
-            setRankingEnumAndList(player, ONE_PAIR, rankingList)
+            setRankingEnumAndList(playerState, ONE_PAIR, rankingList)
             return
         }
         //HIGH_CARD
-        player.rankingEnum = HIGH_CARD
+        playerState.rankingEnum = HIGH_CARD
         val highCardRankingList = ArrayList<Card>()
         highCardRankingList.add(highCard)
-        player.highCardRankingList = highCardRankingList
+        playerState.highCardRankingList = highCardRankingList
         return
     }
 
-    fun getRoyalFlush(player: Player, tableCards: List<Card>): List<Card>? {
-        if (!isSameSuit(player, tableCards)) {
+    fun getRoyalFlush(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        if (!isSameSuit(playerState, tableCards)) {
             return null
         }
 
-        val rankEnumList = toRankEnumList(player, tableCards)
+        val rankEnumList = toRankEnumList(playerState, tableCards)
 
         return if (rankEnumList.contains(CARD_10)
                 && rankEnumList.contains(JACK)
@@ -110,24 +110,24 @@ object RankingUtil {
                 && rankEnumList.contains(KING)
                 && rankEnumList.contains(ACE)) {
 
-            getMergedCardList(player, tableCards)
+            getMergedCardList(playerState, tableCards)
         } else null
 
     }
 
-    fun getStraightFlush(player: Player,
+    fun getStraightFlush(playerState: PlayerState,
                          tableCards: List<Card>): List<Card>? {
-        return getSequence(player, tableCards, 5, true)
+        return getSequence(playerState, tableCards, 5, true)
     }
 
-    fun getFourOfAKind(player: Player,
+    fun getFourOfAKind(playerState: PlayerState,
                        tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+        val mergedList = getMergedCardList(playerState, tableCards)
         return checkPair(mergedList, 4)
     }
 
-    fun getFullHouse(player: Player, tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+    fun getFullHouse(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        val mergedList = getMergedCardList(playerState, tableCards)
         val threeList = checkPair(mergedList, 3)
         if (threeList != null) {
             mergedList.removeAll(threeList)
@@ -140,8 +140,8 @@ object RankingUtil {
         return null
     }
 
-    fun getFlush(player: Player, tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+    fun getFlush(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        val mergedList = getMergedCardList(playerState, tableCards)
         val flushList = ArrayList<Card>()
 
         for (card1 in mergedList) {
@@ -164,18 +164,18 @@ object RankingUtil {
     }
 
     //S‹o 5 cartas seguidas de naipes diferentes, caso empate ganha aquele com a maior sequ?ncia.
-    fun getStraight(player: Player, tableCards: List<Card>): List<Card>? {
-        return getSequence(player, tableCards, 5, false)
+    fun getStraight(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        return getSequence(playerState, tableCards, 5, false)
     }
 
-    fun getThreeOfAKind(player: Player,
+    fun getThreeOfAKind(playerState: PlayerState,
                         tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+        val mergedList = getMergedCardList(playerState, tableCards)
         return checkPair(mergedList, 3)
     }
 
-    fun getTwoPair(player: Player, tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+    fun getTwoPair(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        val mergedList = getMergedCardList(playerState, tableCards)
         val twoPair1 = checkPair(mergedList, 2)
         if (twoPair1 != null) {
             mergedList.removeAll(twoPair1)
@@ -188,16 +188,16 @@ object RankingUtil {
         return null
     }
 
-    fun getOnePair(player: Player, tableCards: List<Card>): List<Card>? {
-        val mergedList = getMergedCardList(player, tableCards)
+    fun getOnePair(playerState: PlayerState, tableCards: List<Card>): List<Card>? {
+        val mergedList = getMergedCardList(playerState, tableCards)
         return checkPair(mergedList, 2)
     }
 
-    fun getHighCard(player: Player, tableCards: List<Card>): Card {
+    fun getHighCard(playerState: PlayerState, tableCards: List<Card>): Card {
         val allCards = ArrayList<Card>()
         allCards.addAll(tableCards)
-        allCards.add(player.myCards[0])
-        allCards.add(player.myCards[1])
+        allCards.add(playerState.myCards[0])
+        allCards.add(playerState.myCards[1])
 
         var highCard = allCards[0]
         for (card in allCards) {
@@ -208,9 +208,9 @@ object RankingUtil {
         return highCard
     }
 
-    private fun getSequence(player: Player,
+    private fun getSequence(playerState: PlayerState,
                             tableCards: List<Card>, sequenceSize: Int?, compareSuit: Boolean): List<Card>? {
-        val orderedList = getOrderedCardList(player, tableCards)
+        val orderedList = getOrderedCardList(playerState, tableCards)
         val sequenceList = ArrayList<Card>()
 
         var cardPrevious: Card? = null
@@ -236,18 +236,18 @@ object RankingUtil {
         return if (sequenceList.size == sequenceSize) sequenceList else null
     }
 
-    private fun getMergedCardList(player: Player,
+    private fun getMergedCardList(playerState: PlayerState,
                                   tableCards: List<Card>): MutableList<Card> {
         val merged = ArrayList<Card>()
         merged.addAll(tableCards)
-        merged.add(player.myCards[0])
-        merged.add(player.myCards[1])
+        merged.add(playerState.myCards[0])
+        merged.add(playerState.myCards[1])
         return merged
     }
 
-    private fun getOrderedCardList(player: Player,
+    private fun getOrderedCardList(playerState: PlayerState,
                                    tableCards: List<Card>): List<Card> {
-        val ordered: MutableList<Card> = getMergedCardList(player, tableCards)
+        val ordered: MutableList<Card> = getMergedCardList(playerState, tableCards)
         Collections.sort(ordered, Comparator<Card> { c1: Card, c2: Card -> if (c1.getRankToInt() < c2.getRankToInt()) -1 else 1 })
         return ordered
     }
@@ -269,10 +269,10 @@ object RankingUtil {
         return null
     }
 
-    private fun isSameSuit(player: Player, tableCards: List<Card>): Boolean {
-        val suit = player.myCards[0].suit
+    private fun isSameSuit(playerState: PlayerState, tableCards: List<Card>): Boolean {
+        val suit = playerState.myCards[0].suit
 
-        if (!suit.equals(player.myCards[1].suit)) {
+        if (!suit.equals(playerState.myCards[1].suit)) {
             return false
         }
 
@@ -285,7 +285,7 @@ object RankingUtil {
         return true
     }
 
-    private fun toRankEnumList(player: Player,
+    private fun toRankEnumList(playerState: PlayerState,
                                tableCards: List<Card>): List<CardRankEnum> {
         val rankEnumList = ArrayList<CardRankEnum>()
 
@@ -293,15 +293,15 @@ object RankingUtil {
             rankEnumList.add(card.rank)
         }
 
-        rankEnumList.add(player.myCards[0].rank)
-        rankEnumList.add(player.myCards[1].rank)
+        rankEnumList.add(playerState.myCards[0].rank)
+        rankEnumList.add(playerState.myCards[1].rank)
 
         return rankEnumList
     }
 
-    private fun setRankingEnumAndList(player: Player,
+    private fun setRankingEnumAndList(playerState: PlayerState,
                                       rankingEnum: RankingEnum, rankingList: List<Card>) {
-        player.rankingEnum = rankingEnum
-        player.highCardRankingList = rankingList
+        playerState.rankingEnum = rankingEnum
+        playerState.highCardRankingList = rankingList
     }
 }

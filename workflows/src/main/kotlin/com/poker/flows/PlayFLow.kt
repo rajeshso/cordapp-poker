@@ -11,7 +11,7 @@ import com.poker.model.RoundEnum.Turned
 import com.poker.model.RoundEnum.Winner
 import com.poker.states.Deck
 import com.poker.states.GameState
-import com.poker.states.Player
+import com.poker.states.PlayerState
 import com.poker.util.GameUtil
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
@@ -75,14 +75,14 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
         val oldDeckStateRef = this.serviceHub.vaultService.queryBy(Deck::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(oldGameState.deckIdentifier))).states.first()
         val newDeckState = oldDeckStateRef.state.data.copy()
         var newGameState = oldGameState.copy(rounds = roundEnum)
-        val newPlayerStates = mutableListOf<Player>()
+        val newPlayerStates = mutableListOf<PlayerState>()
         var txBuilder = TransactionBuilder(notary)
 
         // Step 2. Building.
         progressTracker.currentStep = BUILDING
-        //Create a new copy of Player state for every player state
+        //Create a new copy of PlayerState state for every player state
         for (playerParty in players) {
-            val oldPlayerState = this.serviceHub.vaultService.queryBy(Player::class.java).states.filter { it.state.data.party == playerParty }.first().state.data
+            val oldPlayerState = this.serviceHub.vaultService.queryBy(PlayerState::class.java).states.filter { it.state.data.party == playerParty }.first().state.data
             newPlayerStates.add(oldPlayerState.copy())
         }
         when (roundEnum) {
@@ -122,7 +122,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
                 .addInputState(oldGameStateRef)
                 .addInputState(oldDeckStateRef)
         for (playerParty in newPlayerStates) {
-            val oldPlayerStateRef = this.serviceHub.vaultService.queryBy(Player::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(playerParty.linearId))).states.first()
+            val oldPlayerStateRef = this.serviceHub.vaultService.queryBy(PlayerState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(playerParty.linearId))).states.first()
             txBuilder = txBuilder.addInputState(oldPlayerStateRef)
         }
         for (newPlayerState in newPlayerStates) {

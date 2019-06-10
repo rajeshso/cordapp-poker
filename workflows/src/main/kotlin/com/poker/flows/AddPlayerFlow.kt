@@ -3,7 +3,7 @@ package com.poker.flows
 import co.paralleluniverse.fibers.Suspendable
 import com.poker.contracts.PokerContract
 import com.poker.states.GameState
-import com.poker.states.Player
+import com.poker.states.PlayerState
 import net.corda.core.contracts.Command
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
@@ -13,7 +13,6 @@ import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
-import net.corda.core.utilities.minutes
 import java.util.*
 import net.corda.core.identity.CordaX500Name as CordaX500Name1
 
@@ -58,7 +57,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         val qr = this.serviceHub.vaultService.queryBy(GameState::class.java)
         val gameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(UniqueIdentifier(id = UUID.fromString(gameID))))).states.first()
         val gameState = gameStateRef.state.data
-        val playerState: Player = Player(party = player, dealer = gameState.dealer)
+        val playerStateState: PlayerState = PlayerState(party = player, dealer = gameState.dealer)
         val notary = this.serviceHub.networkMapCache.notaryIdentities.first()
 
         // Step 2. Building.
@@ -69,7 +68,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         val txBuilder = TransactionBuilder(notary)
                 .addInputState(gameStateRef)
                 .addOutputState(newGameState)
-                .addOutputState(playerState)
+                .addOutputState(playerStateState)
                 .addCommand(txCommand)
               //  .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
@@ -86,7 +85,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         // Step 6. Finalise the transaction.
         progressTracker.currentStep = FINALISING
         val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
-        return playerState.linearId
+        return playerStateState.linearId
     }
 
 }

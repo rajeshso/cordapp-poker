@@ -11,7 +11,7 @@ import net.corda.core.serialization.CordaSerializable
 
 @BelongsToContract(PokerContract::class)
 @CordaSerializable
-data class Player(
+data class PlayerState(
         override val linearId: UniqueIdentifier = UniqueIdentifier(),
         val party: Party,
         val dealer: Party) : LinearState {

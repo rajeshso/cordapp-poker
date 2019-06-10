@@ -1,6 +1,6 @@
 package com.poker.flows
 
-import com.poker.states.Player
+import com.poker.states.PlayerState
 import net.corda.core.node.services.queryBy
 import net.corda.core.utilities.getOrThrow
 import net.corda.core.utilities.loggerFor
@@ -13,9 +13,9 @@ import org.junit.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class AddPlayerFlowTests {
+class AddPlayerStateFlowTests {
     companion object {
-        val log = loggerFor<AddPlayerFlowTests>()
+        val log = loggerFor<AddPlayerStateFlowTests>()
     }
 
     private val network = MockNetwork(MockNetworkParameters(cordappsForAllNodes = listOf(
@@ -50,7 +50,7 @@ class AddPlayerFlowTests {
         network.runNetwork()
         val playerUID = addPlayerFlow.getOrThrow()
         assertNotNull(playerUID.id)
-        val playerVault = playerA.services.vaultService.queryBy<Player>()
+        val playerVault = playerA.services.vaultService.queryBy<PlayerState>()
         assertTrue(playerVault.states.size == 1)
         val stateAndRef = playerVault.states.first()
         assertTrue(stateAndRef.state.notary == notaryNode)

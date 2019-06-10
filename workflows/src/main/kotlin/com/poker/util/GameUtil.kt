@@ -2,49 +2,49 @@ package com.poker.util
 
 import com.poker.model.Card
 import com.poker.states.Deck
-import com.poker.states.Player
+import com.poker.states.PlayerState
 import java.util.*
 
 object GameUtil {
 
-    fun deal(players: MutableList<Player>, tableCards: MutableList<Card>, deck: Deck) {
-        for (player in players) {
+    fun deal(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>, deck: Deck) {
+        for (player in playerStates) {
             player.myCards = listOf(deck.pop(), deck.pop())
         }
-        checkPlayersRanking(players, tableCards)
+        checkPlayersRanking(playerStates, tableCards)
     }
 
-    fun betTurn(players: MutableList<Player>, tableCards: MutableList<Card>, deck: Deck) {
+    fun betTurn(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>, deck: Deck) {
         //deck.pop()
         tableCards.add(deck.pop())
-        checkPlayersRanking(players, tableCards)
+        checkPlayersRanking(playerStates, tableCards)
     }
 
-    fun betRiver(players: MutableList<Player>, tableCards: MutableList<Card>, deck: Deck) {
+    fun betRiver(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>, deck: Deck) {
         //deck.pop()
         tableCards.add(deck.pop())
-        checkPlayersRanking(players, tableCards)
+        checkPlayersRanking(playerStates, tableCards)
     }
 
     /**
      * double initial bet
      */
-    fun callFlop(players: MutableList<Player>, tableCards: MutableList<Card>, deck: Deck) {
+    fun callFlop(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>, deck: Deck) {
         //deck.pop()
         tableCards.add(deck.pop())
         tableCards.add(deck.pop())
         tableCards.add(deck.pop())
-        checkPlayersRanking(players, tableCards)
+        checkPlayersRanking(playerStates, tableCards)
     }
 
-    fun getWinner(players: MutableList<Player>, tableCards: MutableList<Card>): List<Player> {
-        checkPlayersRanking(players, tableCards)
-        val winnerList = ArrayList<Player>()
-        var winner = players.get(0)
+    fun getWinner(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>): List<PlayerState> {
+        checkPlayersRanking(playerStates, tableCards)
+        val winnerList = ArrayList<PlayerState>()
+        var winner = playerStates.get(0)
         var winnerRank = RankingUtil.getRankingToInt(winner)
         winnerList.add(winner)
-        for (i in 1 until players.size) {
-            val player = players.get(i)
+        for (i in 1 until playerStates.size) {
+            val player = playerStates.get(i)
             val playerRank = RankingUtil.getRankingToInt(player)
             //Draw game
             if (winnerRank === playerRank) {
@@ -73,45 +73,45 @@ object GameUtil {
         return winnerList
     }
 
-    private fun checkHighSequence(player1: Player, player2: Player): Player? {
-        val player1Rank = sumRankingList(player1)
-        val player2Rank = sumRankingList(player2)
+    private fun checkHighSequence(playerState1: PlayerState, playerState2: PlayerState): PlayerState? {
+        val player1Rank = sumRankingList(playerState1)
+        val player2Rank = sumRankingList(playerState2)
         if (player1Rank > player2Rank) {
-            return player1
+            return playerState1
         } else if (player1Rank < player2Rank) {
-            return player2
+            return playerState2
         }
         return null
     }
 
-    private fun checkHighCardWinner(player1: Player, player2: Player): Player? {
-        var winner = compareHighCard(player1, player1.highCard!!,
-                player2, player2.highCard!!)
+    private fun checkHighCardWinner(playerState1: PlayerState, playerState2: PlayerState): PlayerState? {
+        var winner = compareHighCard(playerState1, playerState1.highCard!!,
+                playerState2, playerState2.highCard!!)
         if (winner == null) {
-            var player1Card = RankingUtil.getHighCard(player1,
+            var player1Card = RankingUtil.getHighCard(playerState1,
                     emptyList<Card>())
-            var player2Card = RankingUtil.getHighCard(player2,
+            var player2Card = RankingUtil.getHighCard(playerState2,
                     emptyList<Card>())
-            winner = compareHighCard(player1, player1Card, player2, player2Card)
+            winner = compareHighCard(playerState1, player1Card, playerState2, player2Card)
             if (winner != null) {
-                player1.highCard = player1Card
-                player2.highCard = player2Card
+                playerState1.highCard = player1Card
+                playerState2.highCard = player2Card
             } else if (winner == null) {
-                player1Card = getSecondHighCard(player1, player1Card)
-                player2Card = getSecondHighCard(player2, player2Card)
-                winner = compareHighCard(player1, player1Card, player2,
+                player1Card = getSecondHighCard(playerState1, player1Card)
+                player2Card = getSecondHighCard(playerState2, player2Card)
+                winner = compareHighCard(playerState1, player1Card, playerState2,
                         player2Card)
                 if (winner != null) {
-                    player1.highCard = player1Card
-                    player2.highCard = player2Card
+                    playerState1.highCard = player1Card
+                    playerState2.highCard = player2Card
                 }
             }
         }
         return winner
     }
 
-    private fun checkPlayersRanking(players: MutableList<Player>, tableCards: MutableList<Card>) {
-        for (player in players) {
+    private fun checkPlayersRanking(playerStates: MutableList<PlayerState>, tableCards: MutableList<Card>) {
+        for (player in playerStates) {
             RankingUtil.checkRanking(player, tableCards)
         }
     }
@@ -119,9 +119,9 @@ object GameUtil {
     /*
 	 * TODO This method must be moved to RankingUtil
 	 */
-    private fun sumRankingList(player: Player): Int {
+    private fun sumRankingList(playerState: PlayerState): Int {
         var sum: Int = 0
-        for (card in player.highCardRankingList) {
+        for (card in playerState.highCardRankingList) {
             sum += card.getRankToInt()
         }
         return sum
@@ -130,19 +130,19 @@ object GameUtil {
     /*
 	 * TODO This method must be moved to RankingUtil
 	 */
-    private fun getSecondHighCard(player: Player, card: Card): Card {
-        return if (player.myCards[0].equals(card)) {
-            player.myCards[1]
-        } else player.myCards[0]
+    private fun getSecondHighCard(playerState: PlayerState, card: Card): Card {
+        return if (playerState.myCards[0].equals(card)) {
+            playerState.myCards[1]
+        } else playerState.myCards[0]
     }
 
-    private fun compareHighCard(player1: Player, player1HighCard: Card,
-                                player2: Player, player2HighCard: Card): Player? {
+    private fun compareHighCard(playerState1: PlayerState, player1HighCard: Card,
+                                playerState2: PlayerState, player2HighCard: Card): PlayerState? {
         if (player1HighCard.getRankToInt() > player2HighCard.getRankToInt()) {
-            return player1
+            return playerState1
         } else if (player1HighCard.getRankToInt() < player2HighCard
                         .getRankToInt()) {
-            return player2
+            return playerState2
         }
         return null
     }

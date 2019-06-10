@@ -162,9 +162,9 @@ For a guided example of how to extend this poker, see the Hello, World! tutorial
 ### Useful commands in the shell
 flow start com.poker.flows.StartGameFlow notary: "O=Notary, L=London, C=GB"
 
-flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, player: "O=PlayerA,L=London,C=GB"
+flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, playerState: "O=PlayerA,L=London,C=GB"
 
-flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, player: "O=PlayerB,L=New York,C=US"
+flow start com.poker.flows.AddPlayerFlow gameID: 211462d1-55b2-4316-aa0b-317c892d0c60, playerState: "O=PlayerB,L=New York,C=US"
 
 flow start com.poker.flows.PlayFLow gameID: 03f1390f-8795-4cbf-b4fb-36102c11c226, round: Dealt
 
@@ -180,7 +180,7 @@ run vaultQuery contractStateType: com.poker.states.GameState
 
 run vaultQuery contractStateType: com.poker.states.Deck
 
-run vaultQuery contractStateType: com.poker.states.Player
+run vaultQuery contractStateType: com.poker.states.PlayerState
 
 gameID can be found by running the vault query commands. The linerid is the game id
 
