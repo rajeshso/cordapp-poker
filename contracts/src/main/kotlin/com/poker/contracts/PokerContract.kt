@@ -1,7 +1,6 @@
 package com.poker.contracts
 
 import com.poker.model.RoundEnum
-import com.poker.states.Deck
 import com.poker.states.GameState
 import com.poker.states.PlayerState
 import net.corda.core.contracts.*
@@ -20,10 +19,6 @@ class PokerContract : Contract {
     // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
     // does not throw an exception.
     override fun verify(tx: LedgerTransaction) {
-        // Verification logic goes here.
-        // Group by everything except owner: any modification to the CP at all is considered changing it fundamentally.
-        val groups = tx.groupStates(GameState::participants)
-
         val command = tx.commands.requireSingleCommand<PokerContract.Commands>()
         when(command.value) {
             is Commands.Start_GAME -> requireThat {
