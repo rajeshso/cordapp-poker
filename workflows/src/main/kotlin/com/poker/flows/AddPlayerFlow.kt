@@ -91,7 +91,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
 }
 
 @InitiatedBy(AddPlayerFlow::class)
-class Acceptor(val otherPartySession: FlowSession) : FlowLogic<SignedTransaction>() {
+class AddPlayerAcceptor(val otherPartySession: FlowSession) : FlowLogic<SignedTransaction>() {
     @Suspendable
     override fun call(): SignedTransaction {
         val signTransactionFlow = object : SignTransactionFlow(otherPartySession) {

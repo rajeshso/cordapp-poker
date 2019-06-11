@@ -76,6 +76,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
         val newDeckState = oldDeckStateRef.state.data.copy()
         var newGameState = oldGameState.copy(rounds = roundEnum)
         val newPlayerStates = mutableListOf<PlayerState>()
+        val oldPlayerStates = mutableListOf<PlayerState>()
         var txBuilder = TransactionBuilder(notary)
 
         // Step 2. Building.
@@ -83,6 +84,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
         //Create a new copy of PlayerState state for every player state
         for (playerParty in players) {
             val oldPlayerState = this.serviceHub.vaultService.queryBy(PlayerState::class.java).states.filter { it.state.data.party == playerParty }.first().state.data
+            oldPlayerStates.add(oldPlayerState)
             newPlayerStates.add(oldPlayerState.copy())
         }
         when (roundEnum) {
@@ -111,6 +113,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
             Winner -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 val winnerList = GameUtil.getWinner(newPlayerStates, tableCards)
+                newGameState.winner = winnerList.get(0).party
                 println("Winner List is " + winnerList + " and the winning amount of "+newGameState.betAmount + " goes to "+ winnerList.get(0))
                 txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))
             }
@@ -121,7 +124,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
         txBuilder = txBuilder
                 .addInputState(oldGameStateRef)
                 .addInputState(oldDeckStateRef)
-        for (playerParty in newPlayerStates) {
+        for (playerParty in oldPlayerStates) {
             val oldPlayerStateRef = this.serviceHub.vaultService.queryBy(PlayerState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(playerParty.linearId))).states.first()
             txBuilder = txBuilder.addInputState(oldPlayerStateRef)
         }

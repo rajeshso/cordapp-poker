@@ -27,7 +27,7 @@ class AddPlayerStateFlowTests {
 
     init {
         listOf(playerA, dealer).forEach {
-            it.registerInitiatedFlow(Acceptor::class.java)
+            it.registerInitiatedFlow(AddPlayerAcceptor::class.java)
         }
     }
 

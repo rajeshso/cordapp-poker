@@ -26,6 +26,7 @@ data class GameState(
 ) : LinearState {
 
     override val participants: List<AbstractParty> get() = listOf(dealer) + players
+    var winner : Party? = null
 
     fun addBetAmount(amount: Int) = copy(
             betAmount = betAmount + amount,
@@ -37,4 +38,5 @@ data class GameState(
             lastChange = LocalDateTime.now()
     )
     //TODO: Deck Signature to be included in GameState . There should be a way for players to ensure that the deck is not tampered
+    //TODO: lastchange to be updated on Rounds
 }
