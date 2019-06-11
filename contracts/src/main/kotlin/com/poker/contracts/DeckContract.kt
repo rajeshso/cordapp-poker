@@ -2,6 +2,7 @@ package com.poker.contracts
 
 import net.corda.core.contracts.CommandData
 import net.corda.core.contracts.Contract
+import net.corda.core.contracts.TypeOnlyCommandData
 import net.corda.core.transactions.LedgerTransaction
 
 // ************
@@ -23,6 +24,6 @@ class DeckContract : Contract {
 
     // Used to indicate the transaction's intent.
     interface Commands : CommandData {
-        class Initialize : Commands
+        class Initialize : TypeOnlyCommandData(), Commands
     }
 }
