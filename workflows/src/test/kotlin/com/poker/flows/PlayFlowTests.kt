@@ -61,12 +61,12 @@ class PlayFlowTests {
         val playerAVault = playerA.services.vaultService.queryBy<PlayerState>()
         val playerAstateAndRef = playerAVault.states.first()
         val playerAState = playerAstateAndRef.state.data
-        assertThat ( playerAState.myCards.size ).isEqualTo(2)
+        assertThat(playerAState.myCards.size).isEqualTo(2)
 
         val playerBVault = playerB.services.vaultService.queryBy<PlayerState>()
         val playerBstateAndRef = playerBVault.states.first()
         val playerBState = playerBstateAndRef.state.data
-        assertThat ( playerBState.myCards.size ).isEqualTo(2)
+        assertThat(playerBState.myCards.size).isEqualTo(2)
     }
 
     @Test
@@ -88,7 +88,7 @@ class PlayFlowTests {
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()
         val dealerStateAndRef = dealerAVault.states.first()
         val gameState = dealerStateAndRef.state.data
-        assertThat ( gameState.tableCards.size ).isEqualTo(3)
+        assertThat(gameState.tableCards.size).isEqualTo(3)
     }
 
     @Test
@@ -112,7 +112,7 @@ class PlayFlowTests {
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()
         val dealerStateAndRef = dealerAVault.states.first()
         val gameState = dealerStateAndRef.state.data
-        assertThat ( gameState.tableCards.size ).isEqualTo(4)
+        assertThat(gameState.tableCards.size).isEqualTo(4)
     }
 
     @Test
@@ -138,7 +138,7 @@ class PlayFlowTests {
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()
         val dealerStateAndRef = dealerAVault.states.first()
         val gameState = dealerStateAndRef.state.data
-        assertThat ( gameState.tableCards.size ).isEqualTo(5)
+        assertThat(gameState.tableCards.size).isEqualTo(5)
     }
 
     @Test
@@ -166,6 +166,6 @@ class PlayFlowTests {
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()
         val dealerStateAndRef = dealerAVault.states.first()
         val gameState = dealerStateAndRef.state.data
-        assertThat (gameState.winner ).isNotNull()
+        assertThat(gameState.winner).isNotNull()
     }
 }

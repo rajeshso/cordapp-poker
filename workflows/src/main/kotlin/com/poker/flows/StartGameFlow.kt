@@ -15,7 +15,6 @@ import net.corda.core.identity.Party
 import net.corda.core.transactions.TransactionBuilder
 import net.corda.core.utilities.ProgressTracker
 import net.corda.core.utilities.ProgressTracker.Step
-import net.corda.core.utilities.minutes
 
 // *********
 // * Flows *
@@ -47,7 +46,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
 
-        fun tracker() = ProgressTracker(INITIALISING,  DECKING, BUILDING,SIGNING, FINALISING)
+        fun tracker() = ProgressTracker(INITIALISING, DECKING, BUILDING, SIGNING, FINALISING)
     }
 
     @Suspendable
@@ -58,7 +57,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
 
         // Step 2. Decking.
         progressTracker.currentStep = DECKING
-        val deck: Deck = Deck( dealer )
+        val deck: Deck = Deck(dealer)
         val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), dealer.owningKey)
         val txInternalBuilder = TransactionBuilder(notary)
                 .addOutputState(deck)
@@ -74,7 +73,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
         val txBuilder = TransactionBuilder(notary)
                 .addOutputState(gameState)
                 .addCommand(txCommand)
-               // .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+        // .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
 

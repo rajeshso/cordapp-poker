@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.poker.model.RoundEnum
 import com.poker.states.GameState
-import com.poker.states.PlayerState
 import net.corda.core.node.services.queryBy
 import net.corda.core.utilities.getOrThrow
 import net.corda.core.utilities.loggerFor
@@ -62,6 +61,6 @@ class AddBettingAmountFlowTests {
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()
         val dealerStateAndRef = dealerAVault.states.first()
         val gameState = dealerStateAndRef.state.data
-        assertThat ( gameState.betAmount ).isEqualTo(betAmount)
+        assertThat(gameState.betAmount).isEqualTo(betAmount)
     }
 }

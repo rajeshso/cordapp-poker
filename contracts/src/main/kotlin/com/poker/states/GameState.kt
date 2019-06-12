@@ -3,11 +3,9 @@ package com.poker.states
 import com.poker.contracts.PokerContract
 import com.poker.model.Card
 import com.poker.model.RoundEnum
-import net.corda.core.contracts.Amount
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.LinearState
 import net.corda.core.contracts.UniqueIdentifier
-import net.corda.core.identity.AbstractParty
 import net.corda.core.identity.Party
 import net.corda.core.serialization.CordaSerializable
 import java.time.LocalDateTime
@@ -22,7 +20,7 @@ data class GameState(
         var tableCards: List<Card>,
         var rounds: RoundEnum,
         var betAmount: Int,
-        var winner : Party? = null,
+        var winner: Party? = null,
         val lastChange: LocalDateTime = LocalDateTime.now()
 ) : LinearState {
 

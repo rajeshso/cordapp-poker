@@ -43,6 +43,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
         object COLLECTING : ProgressTracker.Step("Collecting signatures from the dealer and other players.") {
             override fun childProgressTracker() = CollectSignaturesFlow.tracker()
         }
+
         object FINALISING : ProgressTracker.Step("Finalising transaction. - Full Final signature on the vault") {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }
@@ -70,7 +71,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
                 .addOutputState(newGameState)
                 .addOutputState(playerStateState)
                 .addCommand(txCommand)
-              //  .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
+        //  .setTimeWindow(serviceHub.clock.instant(), 5.minutes)
         txBuilder.verify(serviceHub)
 
         // Step 3. Sign the transaction.

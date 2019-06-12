@@ -19,7 +19,7 @@ data class PlayerState(
         var rankingEnum: RankingEnum = RankingEnum.HIGH_CARD,
         var highCard: Card? = null,
         var highCardRankingList: List<Card> = emptyList<Card>()
-        ) : LinearState {
+) : LinearState {
     override val participants: List<Party>
         get() = listOf(party, dealer)
 }

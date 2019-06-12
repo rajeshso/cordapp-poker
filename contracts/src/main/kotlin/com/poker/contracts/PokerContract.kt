@@ -20,7 +20,7 @@ class PokerContract : Contract {
     // does not throw an exception.
     override fun verify(tx: LedgerTransaction) {
         val command = tx.commands.requireSingleCommand<PokerContract.Commands>()
-        when(command.value) {
+        when (command.value) {
             is Commands.Start_GAME -> requireThat {
                 "There are no inputs" using (tx.inputStates.isEmpty())
                 "There is exactly one output" using (tx.outputStates.size == 1)
@@ -32,17 +32,17 @@ class PokerContract : Contract {
 
                 "The table cards are empty" using (output.tableCards.isEmpty())
 
-                "Bet amount is zero" using (output.betAmount==0)
-                "Deck is present" using (output.deckIdentifier!= null)
+                "Bet amount is zero" using (output.betAmount == 0)
+                "Deck is present" using (output.deckIdentifier != null)
                 "Players are empty" using (output.players.isEmpty())
                 "Round is started" using (output.rounds.equals(RoundEnum.Started))
                 "Winner is not there yet" using (output.winner == null)
             }
             is Commands.ADD_PLAYER -> requireThat {
-                "There should be exactly one input" using (tx.inputStates.size ==1)
+                "There should be exactly one input" using (tx.inputStates.size == 1)
                 "The input should be a GameState" using (tx.inputStates.first() is GameState)
-                "There should be two outputs" using (tx.outputStates.size ==2)
-                "The two outputs are a Game State and a Player State" using  (tx.groupStates(GameState::deckIdentifier).size ==1 && tx.groupStates(PlayerState::party).size ==1)
+                "There should be two outputs" using (tx.outputStates.size == 2)
+                "The two outputs are a Game State and a Player State" using (tx.groupStates(GameState::deckIdentifier).size == 1 && tx.groupStates(PlayerState::party).size == 1)
                 val outputGameState = tx.outputsOfType<GameState>().single()
                 val outputPlayerState = tx.outputsOfType<PlayerState>().single()
             }

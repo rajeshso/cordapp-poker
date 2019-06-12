@@ -41,6 +41,7 @@ class AddBettingAmountFlow(val gameID: String, val amount: Int) : FlowLogic<Unit
         object COLLECTING : ProgressTracker.Step("Collecting signatures from the dealer and other players.") {
             override fun childProgressTracker() = CollectSignaturesFlow.tracker()
         }
+
         object FINALISING : ProgressTracker.Step("Finalising transaction. - Full Final signature on the vault") {
             override fun childProgressTracker() = FinalityFlow.tracker()
         }

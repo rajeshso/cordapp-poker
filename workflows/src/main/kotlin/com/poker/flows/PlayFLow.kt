@@ -4,11 +4,7 @@ import co.paralleluniverse.fibers.Suspendable
 import com.poker.contracts.PokerContract
 import com.poker.model.Card
 import com.poker.model.RoundEnum
-import com.poker.model.RoundEnum.Dealt
-import com.poker.model.RoundEnum.Flopped
-import com.poker.model.RoundEnum.Rivered
-import com.poker.model.RoundEnum.Turned
-import com.poker.model.RoundEnum.Winner
+import com.poker.model.RoundEnum.*
 import com.poker.states.Deck
 import com.poker.states.GameState
 import com.poker.states.PlayerState
@@ -114,7 +110,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
                 val tableCards = newGameState.tableCards.toMutableList()
                 val winnerList = GameUtil.getWinner(newPlayerStates, tableCards)
                 newGameState.winner = winnerList.get(0).party
-                println("Winner List is " + winnerList + " and the winning amount of "+newGameState.betAmount + " goes to "+ winnerList.get(0))
+                println("Winner List is " + winnerList + " and the winning amount of " + newGameState.betAmount + " goes to " + winnerList.get(0))
                 txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))
             }
             else ->
