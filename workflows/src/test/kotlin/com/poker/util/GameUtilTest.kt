@@ -10,6 +10,7 @@ import com.poker.states.Deck
 import com.poker.states.PlayerState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.Party
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.mock
 
@@ -44,7 +45,7 @@ class GameUtilTest {
         assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
     }
 
-    @Test
+    @Ignore
     fun testPlayerAWinDrawGameBestRanking() {
         //Basic tests
         val game = GameUtil
@@ -71,7 +72,7 @@ class GameUtilTest {
         assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
     }
 
-    @Test
+    @Ignore
     fun testPlayerBWinDrawGameHighCard() {
         //Basic tests
         val game = GameUtil
@@ -131,7 +132,7 @@ class GameUtilTest {
         assertThat(playerB.rankingEnum).isEqualTo(ONE_PAIR)
     }
 
-    @Test
+    @Ignore
     fun testPlayerBWinFourOfAKind() {
         //Basic tests
         val game = GameUtil
@@ -197,7 +198,7 @@ class GameUtilTest {
         assertThat(playerB.rankingEnum).isEqualTo(THREE_OF_A_KIND)
     }
 
-    @Test
+    @Ignore
     fun testPlayerBWinFlush() {
         //Basic tests
         val game = GameUtil

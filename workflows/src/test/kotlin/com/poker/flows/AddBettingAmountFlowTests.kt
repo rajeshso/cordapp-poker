@@ -51,8 +51,11 @@ class AddBettingAmountFlowTests {
         val gameUID = startGameFlow.getOrThrow()
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Dealt.name)).toCompletableFuture()
+        network.runNetwork()
         playerA.startFlow(AddBettingAmountFlow(gameUID.toString(), betAmount)).toCompletableFuture()
         network.runNetwork()
 

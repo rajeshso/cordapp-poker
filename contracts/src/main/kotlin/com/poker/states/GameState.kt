@@ -22,11 +22,11 @@ data class GameState(
         var tableCards: List<Card>,
         var rounds: RoundEnum,
         var betAmount: Int,
+        var winner : Party? = null,
         val lastChange: LocalDateTime = LocalDateTime.now()
 ) : LinearState {
 
-    override val participants: List<AbstractParty> get() = listOf(dealer) + players
-    var winner : Party? = null
+    override val participants: List<Party> get() = listOf(dealer) + players
 
     fun addBetAmount(amount: Int) = copy(
             betAmount = betAmount + amount,

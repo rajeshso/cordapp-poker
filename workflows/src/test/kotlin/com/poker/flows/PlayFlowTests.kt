@@ -51,6 +51,7 @@ class PlayFlowTests {
 
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
 
         network.runNetwork()
@@ -76,8 +77,11 @@ class PlayFlowTests {
         val gameUID = startGameFlow.getOrThrow()
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Dealt.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Flopped.name)).toCompletableFuture()
         network.runNetwork()
 
@@ -95,9 +99,13 @@ class PlayFlowTests {
         val gameUID = startGameFlow.getOrThrow()
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Dealt.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Flopped.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Rivered.name)).toCompletableFuture()
         network.runNetwork()
 
@@ -115,10 +123,15 @@ class PlayFlowTests {
         val gameUID = startGameFlow.getOrThrow()
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Dealt.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Flopped.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Rivered.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Turned.name)).toCompletableFuture()
         network.runNetwork()
 
@@ -136,13 +149,18 @@ class PlayFlowTests {
         val gameUID = startGameFlow.getOrThrow()
 
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerA.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(AddPlayerFlow(gameUID.id.toString(), playerB.info.legalIdentities.first())).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Dealt.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Flopped.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Rivered.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Turned.name)).toCompletableFuture()
+        network.runNetwork()
         dealer.startFlow(PlayFLow(gameUID.toString(), RoundEnum.Winner.name)).toCompletableFuture()
-
         network.runNetwork()
 
         val dealerAVault = dealer.services.vaultService.queryBy<GameState>()

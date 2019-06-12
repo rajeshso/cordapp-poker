@@ -74,7 +74,9 @@ class AddBettingAmountFlow(val gameID: String, val amount: Int) : FlowLogic<Unit
 
         // Step 4. Get the counter-party (Players) signature.
         progressTracker.currentStep = COLLECTING
-        val otherPartySessions = newGameState.players.map { initiateFlow(it) }
+        val me = this.serviceHub.myInfo.legalIdentities.first()
+        val participants = newGameState.participants - me
+        val otherPartySessions = participants.map { initiateFlow(it) }
         val fullySignedTx = subFlow(CollectSignaturesFlow(playerSignedTx, otherPartySessions.toSet()))
 
         // Step 6. Finalise the transaction.
