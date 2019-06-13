@@ -55,7 +55,6 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
     override fun call(): UniqueIdentifier {
         // Step 1. Validation.
         progressTracker.currentStep = VALIDATING
-        val qr = this.serviceHub.vaultService.queryBy(GameState::class.java)
         val gameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(UniqueIdentifier(id = UUID.fromString(gameID))))).states.first()
         val gameState = gameStateRef.state.data
         val playerStateState: PlayerState = PlayerState(party = player, dealer = gameState.dealer)

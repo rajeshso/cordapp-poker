@@ -14,13 +14,13 @@ data class Card(val suit: CardSuitEnum, val rank: CardRankEnum) {
         return (suit.ordinal * 10 + rank.ordinal)
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj == null) {
+    override fun equals(other: Any?): Boolean {
+        if (other == null) {
             return false
-        } else if (obj !is Card) {
+        } else if (other !is Card) {
             return false
         } else {
-            val card2 = obj as Card?
+            val card2 = other as Card?
             return rank.equals(card2!!.rank) && suit.equals(card2.suit)
         }
     }

@@ -121,7 +121,7 @@ the username `user1` and the password `test`.
 Run the `Run Poker Client` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
 with the username `user1` and the password `test`.
 
-### Webserver
+### Webserver (Feature Not supported)
 
 `clients/src/main/kotlin/com/poker/webserver/` defines a simple Spring webserver that connects to a node via RPC and 
 allows you to interact with the node over HTTP.
@@ -136,7 +136,7 @@ And a static webpage is defined here:
 
 #### Running the webserver
 
-##### Via the command line
+##### Via the command line (TODO: To test)
 
 Run the `runPokerServer` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
 the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.

@@ -33,7 +33,6 @@ class PokerContract : Contract {
                 "The table cards are empty" using (output.tableCards.isEmpty())
 
                 "Bet amount is zero" using (output.betAmount == 0)
-                "Deck is present" using (output.deckIdentifier != null)
                 "Players are empty" using (output.players.isEmpty())
                 "Round is started" using (output.rounds.equals(RoundEnum.Started))
                 "Winner is not there yet" using (output.winner == null)

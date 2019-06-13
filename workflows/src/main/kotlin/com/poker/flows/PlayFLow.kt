@@ -10,6 +10,7 @@ import com.poker.states.GameState
 import com.poker.states.PlayerState
 import com.poker.util.GameUtil
 import net.corda.core.contracts.Command
+import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
 import net.corda.core.flows.*
@@ -62,74 +63,72 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
         // Initiator flow logic goes here.
         // Step 1. Validation.
         progressTracker.currentStep = VALIDATING
-        val qr = this.serviceHub.vaultService.queryBy(GameState::class.java)
+        val notary = this.serviceHub.networkMapCache.notaryIdentities.first()
         val oldGameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(UniqueIdentifier(id = UUID.fromString(gameID))))).states.first()
         val oldGameState: GameState = oldGameStateRef.state.data
+        val oldPlayerStateRefList = mutableListOf<StateAndRef<PlayerState>>()
         val players = oldGameState.players
-        val notary = this.serviceHub.networkMapCache.notaryIdentities.first()
         val roundEnum = RoundEnum.valueOf(round)
         val oldDeckStateRef = this.serviceHub.vaultService.queryBy(Deck::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(oldGameState.deckIdentifier))).states.first()
         val newDeckState = oldDeckStateRef.state.data.copy()
         var newGameState = oldGameState.copy(rounds = roundEnum)
         val newPlayerStates = mutableListOf<PlayerState>()
         val oldPlayerStates = mutableListOf<PlayerState>()
-        var txBuilder = TransactionBuilder(notary)
+        val txBuilder = TransactionBuilder(notary)
 
         // Step 2. Building.
         progressTracker.currentStep = BUILDING
         //Create a new copy of PlayerState state for every player state
-        for (playerParty in players) {
-            val oldPlayerState = this.serviceHub.vaultService.queryBy(PlayerState::class.java).states.filter { it.state.data.party == playerParty }.first().state.data
+        players.forEach {
+            val oldPlayerStateRef = this.serviceHub.vaultService.queryBy(PlayerState::class.java).states.filter { playerstateref -> playerstateref.state.data.party == it }.first()
+            val oldPlayerState = oldPlayerStateRef.state.data
+            oldPlayerStateRefList.add(oldPlayerStateRef)
             oldPlayerStates.add(oldPlayerState)
             newPlayerStates.add(oldPlayerState.copy())
         }
         when (roundEnum) {
             Dealt -> {
                 GameUtil.deal(newPlayerStates, mutableListOf<Card>(), newDeckState)
-                txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.DEALT(), newGameState.participants.map { it.owningKey }))
+                txBuilder.addCommand(Command(PokerContract.Commands.DEALT(), newGameState.participants.map { it.owningKey }))
             }
             Flopped -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 GameUtil.callFlop(newPlayerStates, tableCards, newDeckState)
                 newGameState = newGameState.copy(tableCards = tableCards.toList())
-                txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.FLOPPED(), newGameState.participants.map { it.owningKey }))
+                txBuilder.addCommand(Command(PokerContract.Commands.FLOPPED(), newGameState.participants.map { it.owningKey }))
             }
             Rivered -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 GameUtil.betRiver(newPlayerStates, tableCards, newDeckState)
                 newGameState = newGameState.copy(tableCards = tableCards.toList())
-                txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.RIVERED(), newGameState.participants.map { it.owningKey }))
+                txBuilder.addCommand(Command(PokerContract.Commands.RIVERED(), newGameState.participants.map { it.owningKey }))
             }
             Turned -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 GameUtil.betTurn(newPlayerStates, tableCards, newDeckState)
                 newGameState = newGameState.copy(tableCards = tableCards.toList())
-                txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.TURNED(), newGameState.participants.map { it.owningKey }))
+                txBuilder.addCommand(Command(PokerContract.Commands.TURNED(), newGameState.participants.map { it.owningKey }))
             }
             Winner -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 val winnerList = GameUtil.getWinner(newPlayerStates, tableCards)
                 newGameState.winner = winnerList.get(0).party
                 println("Winner List is " + winnerList + " and the winning amount of " + newGameState.betAmount + " goes to " + winnerList.get(0))
-                txBuilder = txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))
+                txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))
             }
             else ->
                 throw RuntimeException("This should not happen")
 
         }
-        txBuilder = txBuilder
-                .addInputState(oldGameStateRef)
+        txBuilder.addInputState(oldGameStateRef)
                 .addInputState(oldDeckStateRef)
-        for (playerParty in oldPlayerStates) {
-            val oldPlayerStateRef = this.serviceHub.vaultService.queryBy(PlayerState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(playerParty.linearId))).states.first()
-            txBuilder = txBuilder.addInputState(oldPlayerStateRef)
-        }
-        for (newPlayerState in newPlayerStates) {
-            txBuilder = txBuilder.addOutputState(newPlayerState)
-        }
-        txBuilder = txBuilder.addOutputState(newGameState)
+        oldPlayerStateRefList.forEach { txBuilder.addInputState(it) }
+
+        newPlayerStates.forEach {  txBuilder.addOutputState(it) }
+        txBuilder
+                .addOutputState(newGameState)
                 .addOutputState(newDeckState)
-        txBuilder.verify(serviceHub)
+                .verify(serviceHub)
 
         // Step 3. Sign the transaction.
         progressTracker.currentStep = SIGNING

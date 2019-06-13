@@ -1,6 +1,8 @@
 package com.poker
 
+import com.poker.flows.StartGameFlow
 import net.corda.core.identity.CordaX500Name
+import net.corda.core.messaging.startFlow
 import net.corda.core.utilities.getOrThrow
 import net.corda.testing.core.TestIdentity
 import net.corda.testing.driver.DriverDSL
@@ -19,6 +21,7 @@ class DriverBasedTest {
     fun `node test`() = withDriver {
         // Start a pair of nodes and wait for them both to be ready.
         val (partyAHandle, partyBHandle) = startNodes(bankA, bankB)
+        //partyAHandle.rpc.startFlow(::StartGameFlow, partyAHandle.rpc.notaryIdentities().first())
 
         // From each node, make an RPC call to retrieve another node's name from the network map, to verify that the
         // nodes have started and can communicate.

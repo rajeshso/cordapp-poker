@@ -53,7 +53,6 @@ class AddBettingAmountFlow(val gameID: String, val amount: Int) : FlowLogic<Unit
     override fun call(): Unit {
         // Step 1. Validation.
         progressTracker.currentStep = VALIDATING
-        val qr = this.serviceHub.vaultService.queryBy(GameState::class.java)
         val gameStateRef = this.serviceHub.vaultService.queryBy(GameState::class.java, QueryCriteria.LinearStateQueryCriteria(linearId = listOf(UniqueIdentifier(id = UUID.fromString(gameID))))).states.first()
         val gameState = gameStateRef.state.data
         val notary = this.serviceHub.networkMapCache.notaryIdentities.first()
@@ -82,7 +81,7 @@ class AddBettingAmountFlow(val gameID: String, val amount: Int) : FlowLogic<Unit
 
         // Step 6. Finalise the transaction.
         progressTracker.currentStep = FINALISING
-        val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
+        subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
     }
 
 }
