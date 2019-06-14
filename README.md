@@ -104,7 +104,7 @@ the other nodes on the network:
 
 You can find out more about the node shell [here](https://docs.corda.net/shell.html).
 
-### Client
+### Client (Feature Not supported yet)
 
 `clients/src/main/kotlin/com/poker/Client.kt` defines a simple command-line client that connects to a node via RPC 
 and prints a list of the other nodes on the network.
@@ -134,19 +134,19 @@ And a static webpage is defined here:
 
      clients/src/main/resources/static/
 
-#### Running the webserver
+#### Running the webserver (Feature Not supported)
 
 ##### Via the command line (TODO: To test)
 
 Run the `runPokerServer` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
 the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
 
-##### Via IntelliJ
+##### Via IntelliJ (Feature Not supported)
 
 Run the `Run Poker Server` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
 with the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
 
-#### Interacting with the webserver
+#### Interacting with the webserver (Feature Not supported)
 
 The static webpage is served on:
 
@@ -156,27 +156,25 @@ While the sole poker endpoint is served on:
 
     http://localhost:10050/pokerendpoint
 
-For a guided example of how to extend this poker, see the Hello, World! tutorial 
-[here](https://docs.corda.net/hello-world-introduction.html).
 
 ### Useful commands in the shell
 flow start com.poker.flows.StartGameFlow notary: "O=Notary, L=London, C=GB"
 
-flow start com.poker.flows.AddPlayerFlow gameID: bcf3029b-b42e-4174-af28-5033d454344b, player: "O=PlayerA,L=London,C=GB"
+flow start com.poker.flows.AddPlayerFlow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, player: "O=PlayerA,L=London,C=GB"
 
-flow start com.poker.flows.AddPlayerFlow gameID: bcf3029b-b42e-4174-af28-5033d454344b, player: "O=PlayerB,L=New York,C=US"
+flow start com.poker.flows.AddPlayerFlow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, player: "O=PlayerB,L=New York,C=US"
 
-flow start com.poker.flows.PlayFLow gameID: bcf3029b-b42e-4174-af28-5033d454344b, round: Dealt
+flow start com.poker.flows.PlayFLow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, round: Dealt
 
-flow start com.poker.flows.PlayFLow gameID: bcf3029b-b42e-4174-af28-5033d454344b, round: Flopped
+flow start com.poker.flows.PlayFLow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, round: Flopped
 
-flow start com.poker.flows.PlayFLow gameID: bcf3029b-b42e-4174-af28-5033d454344b, round: Rivered
+flow start com.poker.flows.PlayFLow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, round: Rivered
 
-flow start com.poker.flows.PlayFLow gameID: bcf3029b-b42e-4174-af28-5033d454344b, round: Turned
+flow start com.poker.flows.PlayFLow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, round: Turned
 
-flow start com.poker.flows.PlayFLow gameID: bcf3029b-b42e-4174-af28-5033d454344b, round: Winner
+flow start com.poker.flows.PlayFLow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, round: Winner
 
-flow start com.poker.flows.AddBettingAmountFlow gameID: bcf3029b-b42e-4174-af28-5033d454344b, amount: 100
+flow start com.poker.flows.AddBettingAmountFlow gameID: fad727a1-c1b7-41d3-8eb6-39863080606b, amount: 100
 
 run vaultQuery contractStateType: com.poker.states.GameState
 
