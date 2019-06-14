@@ -216,7 +216,7 @@ object RankingUtil {
         var cardPrevious: Card? = null
         for (card in orderedList) {
             if (cardPrevious != null) {
-                if (card.getRankToInt() - cardPrevious.getRankToInt() === 1) {
+                if (card.getRankToInt() - cardPrevious.getRankToInt() == 1) {
                     if ((!compareSuit) || cardPrevious.suit.equals(card.suit)) {
                         if (sequenceList.size == 0) {
                             sequenceList.add(cardPrevious)

@@ -84,7 +84,7 @@ class AddPlayerFlow(val gameID: String, val player: Party) : FlowLogic<UniqueIde
 
         // Step 6. Finalise the transaction.
         progressTracker.currentStep = FINALISING
-        val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
+        subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
         return playerStateState.linearId
     }
 

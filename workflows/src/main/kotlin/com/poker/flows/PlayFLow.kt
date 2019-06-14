@@ -141,7 +141,7 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
 
         // Step 6. Finalise the transaction.
         progressTracker.currentStep = FINALISING
-        val finalityFlow = subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
+        subFlow(FinalityFlow(fullySignedTx, otherPartySessions.toSet()))
     }
 
 }

@@ -47,7 +47,7 @@ object GameUtil {
             val player = playerStates.get(i)
             val playerRank = RankingUtil.getRankingToInt(player)
             //Draw game
-            if (winnerRank === playerRank) {
+            if (winnerRank == playerRank) {
                 var highHandPlayer = checkHighSequence(winner, player)
                 //Draw checkHighSequence
                 if (highHandPlayer == null) {
@@ -96,7 +96,7 @@ object GameUtil {
             if (winner != null) {
                 playerState1.highCard = player1Card
                 playerState2.highCard = player2Card
-            } else if (winner == null) {
+            } else {
                 player1Card = getSecondHighCard(playerState1, player1Card)
                 player2Card = getSecondHighCard(playerState2, player2Card)
                 winner = compareHighCard(playerState1, player1Card, playerState2,

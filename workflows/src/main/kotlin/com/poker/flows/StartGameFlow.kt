@@ -83,7 +83,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
 
         // Step 5. Finalise the transaction.
         progressTracker.currentStep = FINALISING
-        val finalityFlow = subFlow(FinalityFlow(dealerSignedTx, emptyList()))
+        subFlow(FinalityFlow(dealerSignedTx, emptyList()))
         return gameState.linearId
     }
 }
