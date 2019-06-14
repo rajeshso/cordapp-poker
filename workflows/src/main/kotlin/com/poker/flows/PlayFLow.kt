@@ -113,7 +113,14 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
                 val tableCards = newGameState.tableCards.toMutableList()
                 val winnerList = GameUtil.getWinner(newPlayerStates, tableCards)
                 newGameState.winner = winnerList.get(0).party
-                println("Winner List is " + winnerList + " and the winning amount of " + newGameState.betAmount + " goes to " + winnerList.get(0))
+                println("Table cards are ")
+                println("\t "+ tableCards)
+                println("Winner List is " )
+                winnerList.forEach{
+                    println( it.party.name)
+                    println( "\t\t" + it.myCards)
+                }
+                println("The winning amount of " + newGameState.betAmount + " goes to " + winnerList.get(0).party.name)
                 txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))
             }
             else ->
