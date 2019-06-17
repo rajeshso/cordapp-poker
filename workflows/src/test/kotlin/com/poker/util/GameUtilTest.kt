@@ -29,6 +29,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -55,6 +56,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -82,6 +84,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -110,6 +113,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -142,6 +146,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -175,6 +180,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -208,6 +214,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -240,6 +247,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)
@@ -272,6 +280,7 @@ class GameUtilTest {
         val dealer = mockParty
         val tableCards = mutableListOf<Card>()
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
 
         game.deal(playerList, tableCards, deck)
         game.callFlop(playerList, tableCards, deck)

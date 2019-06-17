@@ -58,6 +58,7 @@ class StartGameFlow(val notary: Party) : FlowLogic<UniqueIdentifier>() {
         // Step 2. Decking.
         progressTracker.currentStep = DECKING
         val deck: Deck = Deck(dealer)
+        deck.shuffle()
         val txInternalCommand = Command(PokerContract.Commands.Start_GAME(), dealer.owningKey)
         val txInternalBuilder = TransactionBuilder(notary)
                 .addOutputState(deck)

@@ -18,6 +18,7 @@ class DeckTests {
     @Before
     fun setup(): Unit {
         deck = Deck(mockParty)
+        deck.shuffle()
     }
 
     @Test

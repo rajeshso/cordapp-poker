@@ -97,17 +97,17 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
                 newGameState = newGameState.copy(tableCards = tableCards.toList())
                 txBuilder.addCommand(Command(PokerContract.Commands.FLOPPED(), newGameState.participants.map { it.owningKey }))
             }
-            Rivered -> {
-                val tableCards = newGameState.tableCards.toMutableList()
-                GameUtil.betRiver(newPlayerStates, tableCards, newDeckState)
-                newGameState = newGameState.copy(tableCards = tableCards.toList())
-                txBuilder.addCommand(Command(PokerContract.Commands.RIVERED(), newGameState.participants.map { it.owningKey }))
-            }
             Turned -> {
                 val tableCards = newGameState.tableCards.toMutableList()
                 GameUtil.betTurn(newPlayerStates, tableCards, newDeckState)
                 newGameState = newGameState.copy(tableCards = tableCards.toList())
                 txBuilder.addCommand(Command(PokerContract.Commands.TURNED(), newGameState.participants.map { it.owningKey }))
+            }
+            Rivered -> {
+                val tableCards = newGameState.tableCards.toMutableList()
+                GameUtil.betRiver(newPlayerStates, tableCards, newDeckState)
+                newGameState = newGameState.copy(tableCards = tableCards.toList())
+                txBuilder.addCommand(Command(PokerContract.Commands.RIVERED(), newGameState.participants.map { it.owningKey }))
             }
             Winner -> {
                 val tableCards = newGameState.tableCards.toMutableList()
@@ -115,10 +115,10 @@ class PlayFLow(val gameID: String, val round: String) : FlowLogic<Unit>() {
                 newGameState.winner = winnerList.get(0).party
                 println("Table cards are ")
                 println("\t "+ tableCards)
-                println("Winner List is " )
+                println("Winner List in order is " )
                 winnerList.forEach{
                     println( it.party.name)
-                    println( "\t\t" + it.myCards)
+                    println( "\t\t with cards" + it.myCards)
                 }
                 println("The winning amount of " + newGameState.betAmount + " goes to " + winnerList.get(0).party.name)
                 txBuilder.addCommand(Command(PokerContract.Commands.WINNER(), newGameState.participants.map { it.owningKey }))

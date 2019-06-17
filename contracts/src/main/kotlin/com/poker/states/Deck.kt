@@ -16,12 +16,12 @@ import kotlin.collections.HashSet
 
 @BelongsToContract(DeckContract::class)
 @CordaSerializable
-data class Deck(val owner: AbstractParty, override val linearId: UniqueIdentifier = UniqueIdentifier()) : LinearState {
+data class Deck(val owner: AbstractParty, var index: Int = 0, var cards: List<Card> = emptyList(), override val linearId: UniqueIdentifier = UniqueIdentifier()) : LinearState {
 
 
     override val participants: List<AbstractParty> = listOf(owner)
 
-    var index = 0
+
     val signature get() = cards.joinToString(",")
 
     fun pop(): Card {
@@ -32,21 +32,16 @@ data class Deck(val owner: AbstractParty, override val linearId: UniqueIdentifie
         }
     }
 
-    companion object {
-        val cards: List<Card>
-
-        init {
-            val allCards: HashSet<Card> = HashSet<Card>()
-            for (suit in CardSuitEnum.values()) {
-                for (rank in CardRankEnum.values()) {
-                    allCards.add(Card(suit, rank))
-                }
+    fun shuffle()  {
+        val allCards: HashSet<Card> = HashSet<Card>()
+        for (suit in CardSuitEnum.values()) {
+            for (rank in CardRankEnum.values()) {
+                allCards.add(Card(suit, rank))
             }
-            // Created a new Deck of Shuffled Cards
-            cards = ArrayList<Card>(52)
-            cards.addAll(allCards)
-            Collections.shuffle(cards, Random())
         }
+        // Created a new Deck of Shuffled Cards
+        //cards = ArrayList(52)
+        cards = cards+ allCards
+        Collections.shuffle(cards, Random())
     }
-
 }
