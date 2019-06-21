@@ -44,6 +44,9 @@ If you are looking to run only unit tests, you may run the script :
 
 ## Running the nodes
 
+./run.sh would bring up four nodes in different terminal windows.
+You will notice the terminal title as Notary, Dealer and the two players
+
 See https://docs.corda.net/tutorial-cordapp.html#running-the-example-cordapp.
 
 ## Interacting with the nodes
@@ -104,59 +107,127 @@ the other nodes on the network:
 
 You can find out more about the node shell [here](https://docs.corda.net/shell.html).
 
-### Client (Feature Not supported yet)
+You can run a Poker game on the nodes:
 
-`clients/src/main/kotlin/com/poker/Client.kt` defines a simple command-line client that connects to a node via RPC 
-and prints a list of the other nodes on the network.
+On the Dealer node, run the following to start the game:
+`flow start com.poker.flows.StartGameFlow notary: "O=Notary, L=London, C=GB"`
 
-#### Running the client
+After the flow completes, find the game ID by using the following command:
+`run vaultQuery contractStateType: com.poker.states.GameState`
 
-##### Via the command line
+That will come up with the output as the following:
+     
+    Fri Jun 21 15:15:17 BST 2019>>> run vaultQuery contractStateType: com.poker.states.GameState
+    states:
+    - state:
+        data: !<com.poker.states.GameState>
+          linearId:
+            externalId: null
+            id: "9d315cc4-88f5-48d1-8b72-c262bf785b12"
+    
+The `9d315cc4-88f5-48d1-8b72-c262bf785b12` is the game id in the above example. Note down the id you see in the terminal.
 
-Run the `runPokerClient` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
-the username `user1` and the password `test`.
+When you run multiple start games, you may see more than one game states. Note that you have to be careful to choose which of the games you wanted to play.
 
-##### Via IntelliJ
+Now that you have successfully created a game. Lets add players to the game. Currently, only two nodes are present in the network. Lets add whoever is available.
 
-Run the `Run Poker Client` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
-with the username `user1` and the password `test`.
+On the Dealer Node, run the following two commands - one at a time.
 
-### Webserver (Feature Not supported)
+`flow start com.poker.flows.AddPlayerFlow gameID: <GameID>, player: "O=PlayerA,L=London,C=GB"`
 
-`clients/src/main/kotlin/com/poker/webserver/` defines a simple Spring webserver that connects to a node via RPC and 
-allows you to interact with the node over HTTP.
+`flow start com.poker.flows.AddPlayerFlow gameID: <GameID>, player: "O=PlayerB,L=New York,C=US"`
 
-The API endpoints are defined here:
+The above commands would have added the two players into the game you wanted them to join.
 
-     clients/src/main/kotlin/com/poker/webserver/Controller.kt
+If you would like to check, if you have added the players, you can run the vault query of Game State on Dealer or the players
 
-And a static webpage is defined here:
+You will see the following output:
 
-     clients/src/main/resources/static/
+    Fri Jun 21 15:15:17 BST 2019>>> run vaultQuery contractStateType: com.poker.states.GameState
+    states:
+    - state:
+        data: !<com.poker.states.GameState>
+          linearId:
+            externalId: null
+            id: "9d315cc4-88f5-48d1-8b72-c262bf785b12"
+          dealer: "O=Dealer, L=New York, C=US"
+          players:
+            - "O=PlayerA, L=London, C=GB"
+            - "O=PlayerB, L=New York, C=US"
+          deckIdentifier:
+            externalId: null
+            id: "f0430858-6298-45e9-9d52-21cf49aead25"
 
-#### Running the webserver (Feature Not supported)
+You will notice that the Game State has the players. The game also has a unique Deck of cards.
 
-##### Via the command line (TODO: To test)
+Now lets start the betting
 
-Run the `runPokerServer` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
-the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
+On each of the Player terminals, run the following command:
+`flow start com.poker.flows.AddBettingAmountFlow gameID: <GameID>, amount: 100`
 
-##### Via IntelliJ (Feature Not supported)
+Feel free to increase the betting amount. Add betting all through the game if you are confident of the win.
 
-Run the `Run Poker Server` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
-with the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
+Now, lets do the poker rounds.
+On the Dealer terminal, run the following command.
+`flow start com.poker.flows.PlayFLow gameID: <GameID>, round: Dealt`
 
-#### Interacting with the webserver (Feature Not supported)
+The above command would issue two cards to the players. If the player would want to see the cards, go to their terminals and run the following command:
+`run vaultQuery contractStateType: com.poker.states.PlayerState`
 
-The static webpage is served on:
+You will find the output as this:
 
-    http://localhost:10050
+    Fri Jun 21 15:14:47 BST 2019>>> run vaultQuery contractStateType: com.poker.states.PlayerState
+    states:
+    - state:
+        data: !<com.poker.states.PlayerState>
+          linearId:
+            externalId: null
+            id: "3c977ceb-c728-4197-97ec-cae5d3289430"
+          party: "O=PlayerA, L=London, C=GB"
+          dealer: "O=Dealer, L=New York, C=US"
+          myCards:
+          - suit: "SPADES"
+            rank: "CARD_6"
+          - suit: "HEARTS"
+            rank: "CARD_5"
+          rankingEnum: "HIGH_CARD"
+          highCard:
+            suit: "SPADES"
+            rank: "CARD_10"
+          highCardRankingList:
+          - suit: "SPADES"
+            rank: "CARD_10"
+        contract: "com.poker.contracts.PokerContract"
+        notary: "O=Notary, L=London, C=GB"
+        encumbrance: null
 
-While the sole poker endpoint is served on:
+The `myCards` is the card issued to the player. Run the same command in other Players terminal to find the cards.
+The player can also compare the table cards and find if she has got a rank. That is available in `rankingEnum`. 
+The ranking cards can be seen the highCardRankingList. Use this suggestion to increase the betting amount.
 
-    http://localhost:10050/pokerendpoint
+On the Dealer node, you can the following commands to play the subsequent rounds. After each round, find the player's state to see the state of their hand.
 
+`flow start com.poker.flows.PlayFLow gameID: <GameID>, round: Flopped`
 
+`flow start com.poker.flows.PlayFLow gameID: <GameID>, round: Rivered`
+
+`flow start com.poker.flows.PlayFLow gameID: <GameID>, round: Turned`
+
+Now, its the winner time. On the Dealer node, find the winner by running the following command:
+
+`flow start com.poker.flows.PlayFLow gameID: <GameID>, round: Winner`
+ 
+ The winner is displayed in the terminal
+ 
+### Known issues:
+
+The game is ready only for a demo stage. 
+
+There is no error handling. 
+
+The smart contracts are written only for start game.
+ 
+ 
 ### Useful commands in the shell
 flow start com.poker.flows.StartGameFlow notary: "O=Notary, L=London, C=GB"
 
