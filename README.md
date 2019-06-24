@@ -4,6 +4,9 @@
 
 # CorDapp Poker - Texas-Hold-Em
 
+[![Build Status](https://travis-ci.org/rajeshso/cordapp-poker.svg?branch=cordapp-poker)](https://travis-ci.org/rajeshso/cordapp-poker)
+
+
 Welcome to the Texas-Hold-Em-Process in CordaApp. 
 
 # Pre-Requisites
